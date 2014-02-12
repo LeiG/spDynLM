@@ -1,0 +1,1 @@
+## apply Geweke convergence diagnostics

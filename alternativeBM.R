@@ -1,0 +1,1 @@
+## apply stopping rule with ALTERNATIVE bm
