@@ -1,10 +1,12 @@
 ## apply stopping rule with ORIGINAL bm
+library(mcmcse)
 
 ## mcmc samples
 beta.0.samples<- read.table("beta.0.samples.txt")
 beta.samples<- read.table("beta.samples.txt")
 sigma.eta.samples<- read.table("sigma.eta.samples.txt")
 theta.samples<- read.table("theta.samples.txt")
+samples<- cbind(beta.0.samples, beta.samples, sigma.eta.samples, theta.samples)
 
 ## define functions
 bm<- function(x){
@@ -16,16 +18,32 @@ bm<- function(x){
   mu.hat = mean(x)
   var.hat = n * b * sum((y - mu.hat)^2)/(a - 1)/a
   se = sqrt(var.hat/n)
-  list(est= mu.hat, se= se)
+  return(c(mu.hat, se))
 }
 
 ## stopping rule
-epsilon<- 0.05
+eps<- 0.05
+jump<- 20
+check<- 2^12
+z< 1.96
 while(1){
-  check<- 2^12
-  b<- sqrt(check)
+  X<- samples[0:check,]
+  
+  mcse<- apply(X, 2, bm)
+  std<- apply(X, 2, sd)
+  cond<- 2*z*mcse[2,]/sqrt(check)-eps*std #95% confidence
+  if(all(cond<=0)){
+    ess.old<- apply(X, 2, ess)
+    ess.new<- std^2/mcse^2
+    ess.app<- 4*(z/eps)^2
+    out<- list(n= check, app= ess.app, old= ess.old, new= ess.new)
+    write.table(out, "output_origin.txt")
+    write.table(mcse, "mcse_origin.txt")
+    break
+  }
+  
+  b.size<- sqrt(check)
+  check<- check+jump*b.size
+  nbatch<- check/b.size
+  if(!(nbatch%%2)){check<- check+b.size}
 }
-mcse.beta.0<- apply(beta.0.samples, 2, bm)
-mcse.beta<- apply(beta.samples, 2, bm)
-mcse.sigma.eta<- apply(sigma.eta.samples, 2, bm)
-mcse.theta<- apply(theta.samples, 2, bm)
