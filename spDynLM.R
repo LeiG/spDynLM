@@ -33,7 +33,7 @@ priors <- list("beta.0.Norm"=list(rep(0,p), diag(1000,p)),
                "sigma.eta.IW"=list(2, diag(0.001,p)))
 ##make symbolic model formula statement for each month
 mods <- lapply(paste(colnames(y.t),'elev',sep='~'), as.formula)
-n.samples <- 1000000
+n.samples <- 100000
 
 ## get MCMC samples
 m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), coords=coords,
