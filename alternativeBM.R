@@ -13,7 +13,16 @@ eps<- 0.05
 jump<- 20
 check<- 2^12
 z<- 1.96
+d<- dim(samples)[2]
+b<- matrix(, 20, d)
+X<- y = sapply(1:a, function(k) return(mean(g(x[((k - 1) * 
+                                                   b + 1):(k * b)]))))
+X<- matrix(, check/sqrt(check), d)
+sapply(0:b, function(j) return(mean((g(x[1:(n - j)]) - 
+                                       mu.hat) * (g(x[(j + 1):n]) - mu.hat))))
 while(1){
-  temp<- samples[]
+  b.size<- sqrt(check)
+  nbatch<- check/b.size
+  
   
 }
