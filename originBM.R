@@ -25,9 +25,10 @@ bm<- function(x){
 eps<- 0.05
 jump<- 20
 check<- 2^12
-z< 1.96
+z<- 1.96
 while(1){
   X<- samples[0:check,]
+  print(check)
   
   mcse<- apply(X, 2, bm)
   std<- apply(X, 2, sd)
