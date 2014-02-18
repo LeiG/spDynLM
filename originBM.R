@@ -25,7 +25,7 @@ bm<- function(x){
 ## stopping rule
 eps<- 0.05
 jump<- 20
-check<- 2^12
+check<- 2^14
 z<- 1.96
 while(1){
   X<- samples[0:check,]
@@ -33,7 +33,7 @@ while(1){
   
   mcse<- apply(X, 2, bm)
   std<- apply(X, 2, sd)
-  cond<- 2*z*mcse/sqrt(check)-eps*std #95% confidence
+  cond<- 2*z*mcse-eps*std #95% confidence
   write.table(cond, "cond_origin.txt")
   if(all(cond<=0)){
     ess.old<- apply(X, 2, ess)
