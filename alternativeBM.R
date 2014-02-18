@@ -13,18 +13,25 @@ eps<- 0.05
 z<- 1.96
 d<- dim(samples)[2]
 b.size<- c(2^6, 2^6)
+b.range<- 2^seq(6, 15)
 batch<- matrix(, b.size[1], d)
 b.count<- 0 # number of iterations within batch
 batch.count<- 0 # number of batches
 n<- 0 # number of iterations
 tank.std<- matrix(0, 3, d)
+
+# n = 1
+b.count= b.count+1
+n= n+1
+batch[b.count,]<- samples[n,]
 tank.std[1,]<- samples[1,]
+
 while(1){
   b.count= b.count+1
   n= n+1
   batch[b.count,]<- samples[n,]
   tank.std[2,]<- ((n-1)*tank.std[1,]+batch[b.count,])/n
-  tank.std[3,]<- tank.std[3,]+n*(tank.std[2,]-batch[b.count,])**2/(n-1)
+  tank.std[3,]<- tank.std[3,]+n*(tank.std[2,]-batch[b.count,])^2/(n-1)
   tank.std[1,]<- tank.std[2,]
   
   # check if batch is full
@@ -41,15 +48,15 @@ while(1){
   }
   
   # check every 20/21 batches
-  if((n>=2^12)&&(batch.count>20)&&(!(dim(tank)[1]%%2))){
+  if((n>=2^12) && (batch.count>20) && (!(dim(tank)[1]%%2))){
     print(n)
     batch.count<- 1
     b.size[2]<- b.size[1]
-    b.size[1]<- sqrt(n)
-    nbatch<- n/b.size[1]
+    b.size[1]<- 2^max(which(sqrt(n)>=b.range)+5)
+    nbatch<- floor(n/b.size[1])
     
     #check if batch size changes
-    if(b[1] != b[2]){
+    if(b.size[1] != b.size[2]){
       batch<- matrix(, b.size[1], d)
       tank<- t(sapply(split.data.frame(tank, rep(1:(dim(tank)[1]/2), times=rep(2, (dim(tank)[1]/2)))), apply, 2, mean))
     }
