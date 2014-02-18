@@ -16,9 +16,9 @@ bm<- function(x){
   
   y = sapply(1:a, function(k) return(mean(x[k:(k + b - 1)])))
   mu.hat = mean(x)
-  var.hat = n * b * sum((y - mu.hat)^2)/(a - 1)/a
+  var.hat = n * b * sum((y - mu.hat)^2)/(a - 1)
   se = sqrt(var.hat/n)
-  return(c(mu.hat, se))
+  return(se)
 }
 
 ## stopping rule
@@ -32,19 +32,19 @@ while(1){
   
   mcse<- apply(X, 2, bm)
   std<- apply(X, 2, sd)
-  cond<- 2*z*mcse[2,]/sqrt(check)-eps*std #95% confidence
+  cond<- 2*z*mcse/sqrt(check)-eps*std #95% confidence
   if(all(cond<=0)){
     ess.old<- apply(X, 2, ess)
-    ess.new<- std^2/mcse[2,]^2
+    ess.new<- std^2/mcse^2
     ess.app<- 4*(z/eps)^2
     out<- list(n= check, app= ess.app, old= ess.old, new= ess.new)
     write.table(out, "output_origin.txt")
-    write.table(mcse[2,], "mcse_origin.txt")
+    write.table(mcse, "mcse_origin.txt")
     break
   }
   
-  b.size<- sqrt(check)
+  b.size<- floor(sqrt(check))
   check<- check+jump*b.size
-  nbatch<- check/b.size
+  nbatch<- floor(check/b.size)
   if(!(nbatch%%2)){check<- check+b.size}
 }
