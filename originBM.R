@@ -35,7 +35,7 @@ while(1){
   cond<- 2*z*mcse[2,]/sqrt(check)-eps*std #95% confidence
   if(all(cond<=0)){
     ess.old<- apply(X, 2, ess)
-    ess.new<- std^2/mcse[2,]^2*check
+    ess.new<- std^2/mcse[2,]^2
     ess.app<- 4*(z/eps)^2
     out<- list(n= check, app= ess.app, old= ess.old, new= ess.new)
     write.table(out, "output_origin.txt")
