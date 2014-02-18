@@ -1,5 +1,5 @@
 ## apply stopping rule with ORIGINAL bm
-library(mcmcse)
+require(mcmcse)
 
 ## mcmc samples
 beta.0.samples<- read.table("beta.0.samples.txt")
@@ -14,17 +14,17 @@ bm<- function(x){
   b= floor(sqrt(n))
   a= floor(n/b)
   
-  y = sapply(1:a, function(k) return(mean(x[k:(k + b - 1)])))
-  mu.hat = mean(x)
-  var.hat = n * b * sum((y - mu.hat)^2)/(a - 1)
+  y = sapply(1:a, function(k) return(mean(x[((k - 1) * b + 1):(k * b)])))
+  mu.hat = mean(y)
+  var.hat = b * sum((y - mu.hat)^2)/(a - 1)
   se = sqrt(var.hat/n)
   return(se)
 }
 
 ## stopping rule
-eps<- 0.05
+eps<- 0.1
 jump<- 20
-check<- 2^12
+check<- 2^14
 z<- 1.96
 while(1){
   X<- samples[0:check,]
@@ -33,6 +33,7 @@ while(1){
   mcse<- apply(X, 2, bm)
   std<- apply(X, 2, sd)
   cond<- 2*z*mcse/sqrt(check)-eps*std #95% confidence
+  write.table(cond, "cond_origin.txt")
   if(all(cond<=0)){
     ess.old<- apply(X, 2, ess)
     ess.new<- std^2/mcse^2

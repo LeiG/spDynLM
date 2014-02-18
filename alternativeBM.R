@@ -1,5 +1,5 @@
 ## apply stopping rule with ALTERNATIVE bm
-library(mcmcse)
+require(mcmcse)
 
 ## mcmc samples
 beta.0.samples<- read.table("beta.0.samples.txt")
@@ -9,11 +9,11 @@ theta.samples<- read.table("theta.samples.txt")
 samples<- as.matrix(cbind(beta.0.samples, beta.samples, sigma.eta.samples, theta.samples))
 
 ## stopping rule
-eps<- 0.05
+eps<- 0.1
 z<- 1.96
 d<- dim(samples)[2]
-b.size<- c(2^6, 2^6)
-b.range<- 2^seq(6, 15)
+b.size<- c(2^7, 2^7)
+b.range<- 2^seq(7, 15)
 batch<- matrix(, b.size[1], d)
 b.count<- 0 # number of iterations within batch
 batch.count<- 0 # number of batches
@@ -48,11 +48,11 @@ while(1){
   }
   
   # check every 20/21 batches
-  if((n>=2^12) && (batch.count>20) && (!(dim(tank)[1]%%2))){
+  if((n>=2^14) && (batch.count>20) && (!(dim(tank)[1]%%2))){
     print(n)
     batch.count<- 1
     b.size[2]<- b.size[1]
-    b.size[1]<- 2^max(which(sqrt(n)>=b.range)+5)
+    b.size[1]<- 2^max(which(sqrt(n)>=b.range)+6)
     nbatch<- floor(n/b.size[1])
     
     #check if batch size changes
@@ -63,6 +63,7 @@ while(1){
     
     tank.mcse<- sqrt(apply((tank-apply(tank, 2, mean))^2, 2, sum)*b.size[1]/((nbatch-1)*n))
     cond<- 2*z*tank.mcse-eps*sqrt(tank.std[3,]/(n-1))
+    write.table(cond, "cond_alternative.txt")
     if(all(cond<=0)){
       ess.new<- (tank.std[3,]/(n-1))/tank.mcse^2*n
       ess.app<- 4*(z/eps)^2
