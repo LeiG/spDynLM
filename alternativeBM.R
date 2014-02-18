@@ -42,6 +42,7 @@ while(1){
   
   # check every 20/21 batches
   if((n>=2^12)&&(batch.count>20)&&(!(dim(tank)[1]%%2))){
+    print(n)
     batch.count<- 1
     b.size[2]<- b.size[1]
     b.size[1]<- sqrt(n)
