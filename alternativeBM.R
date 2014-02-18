@@ -59,8 +59,8 @@ while(1){
       ess.new<- (tank.std[3,]/(n-1))/tank.mcse^2*n
       ess.app<- 4*(z/eps)^2
       out<- list(n= check, app= ess.app, new= ess.new)
-      write.table(out, "output_origin.txt")
-      write.table(tank.mcse, "mcse_origin.txt")
+      write.table(out, "output_alternative.txt")
+      write.table(tank.mcse, "mcse_alternative.txt")
       break
     }
   }
