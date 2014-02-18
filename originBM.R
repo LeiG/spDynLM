@@ -7,6 +7,7 @@ beta.samples<- read.table("beta.samples.txt")
 sigma.eta.samples<- read.table("sigma.eta.samples.txt")
 theta.samples<- read.table("theta.samples.txt")
 samples<- cbind(beta.0.samples, beta.samples, sigma.eta.samples, theta.samples)
+rm(beta.0.samples, beta.samples, sigma.eta.samples, theta.samples)
 
 ## define functions
 bm<- function(x){
@@ -22,7 +23,7 @@ bm<- function(x){
 }
 
 ## stopping rule
-eps<- 0.1
+eps<- 0.05
 jump<- 20
 check<- 2^14
 z<- 1.96

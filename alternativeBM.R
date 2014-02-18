@@ -7,9 +7,10 @@ beta.samples<- read.table("beta.samples.txt")
 sigma.eta.samples<- read.table("sigma.eta.samples.txt")
 theta.samples<- read.table("theta.samples.txt")
 samples<- as.matrix(cbind(beta.0.samples, beta.samples, sigma.eta.samples, theta.samples))
+rm(beta.0.samples, beta.samples, sigma.eta.samples, theta.samples)
 
 ## stopping rule
-eps<- 0.1
+eps<- 0.05
 z<- 1.96
 d<- dim(samples)[2]
 b.size<- c(2^7, 2^7)
