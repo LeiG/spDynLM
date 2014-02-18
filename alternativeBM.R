@@ -62,7 +62,7 @@ while(1){
       tank<- t(sapply(split.data.frame(tank, rep(1:(dim(tank)[1]/2), times=rep(2, (dim(tank)[1]/2)))), apply, 2, mean))
     }
     
-    tank.mcse<- sqrt(apply((tank-apply(tank, 2, mean))^2, 2, sum)*b.size[1]/((nbatch-1)*n))
+    tank.mcse<- apply(tank, 2, sd)*sqrt(b.size[1]/n)
     cond<- 2*z*tank.mcse-eps*sqrt(tank.std[3,]/(n-1))
     write.table(cond, "cond_alternative.txt")
     if(all(cond<=0)){
