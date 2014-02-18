@@ -2,12 +2,13 @@
 require(mcmcse)
 
 ## mcmc samples
-beta.0.samples<- read.table("beta.0.samples.txt")
-beta.samples<- read.table("beta.samples.txt")
-sigma.eta.samples<- read.table("sigma.eta.samples.txt")
-theta.samples<- read.table("theta.samples.txt")
-samples<- as.matrix(cbind(beta.0.samples, beta.samples, sigma.eta.samples, theta.samples))
-rm(beta.0.samples, beta.samples, sigma.eta.samples, theta.samples)
+# beta.0.samples<- read.table("beta.0.samples.txt")
+# beta.samples<- read.table("beta.samples.txt")
+# sigma.eta.samples<- read.table("sigma.eta.samples.txt")
+# theta.samples<- read.table("theta.samples.txt")
+# samples<- as.matrix(cbind(beta.0.samples, beta.samples, sigma.eta.samples, theta.samples))
+# rm(beta.0.samples, beta.samples, sigma.eta.samples, theta.samples)
+samples<- as.matrix(read.table("samples.txt"))
 
 ## stopping rule
 eps<- 0.05
