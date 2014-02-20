@@ -54,7 +54,7 @@ m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), coords=coords,
 # theta.samples<- m.1$p.theta.samples
 # u.samples<- m.1$p.u.samples
 # y.samples<- m.1$p.y.samples
-samples<- as.matrix(cbind(m.1$beta.0.samples, m.1$beta.samples, m.1$sigma.eta.samples, m.1$theta.samples))
+samples<- cbind(m.1$p.beta.0.samples, m.1$p.beta.samples, m.1$p.sigma.eta.samples, m.1$p.theta.samples)
 rm(m.1)
 
 ## define functions
