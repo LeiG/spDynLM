@@ -48,7 +48,7 @@ n.samples <- 900000
 m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), coords=coords,
                starting=starting, tuning=tuning, priors=priors, get.fitted =TRUE,
                cov.model="exponential", n.samples=n.samples, n.report=0.1*n.samples)
-samples<- cbind(m.1$beta.0.samples, m.1$beta.samples, m.1$sigma.eta.samples, m.1$theta.samples)
+samples<- as.matrix(cbind(m.1$beta.0.samples, m.1$beta.samples, m.1$sigma.eta.samples, m.1$theta.samples))
 rm(m.1)
 
 ## stopping rule
