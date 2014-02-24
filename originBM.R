@@ -17,9 +17,9 @@ data("NETemp.dat")
 ne.temp <- NETemp.dat
 set.seed(3)
 ##take a chunk of New England
-ne.temp <- ne.temp[ne.temp[,"UTMX"] > 5500000 & ne.temp[,"UTMY"] > 3000000,]
+ne.temp <- ne.temp[ne.temp[,"UTMX"] > 5500000 & ne.temp[,"UTMY"] > 3250000,]
 ##subset first 1 years (Jan 2000 - Dec. 2001)
-y.t <- ne.temp[,4:27]
+y.t <- ne.temp[,4:15]
 N.t <- ncol(y.t) ##number of months
 n <- nrow(y.t) ##number of observation per months
 ##add some missing observations to illistrate prediction
@@ -54,7 +54,7 @@ m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), coords=coords,
 # theta.samples<- m.1$p.theta.samples
 # u.samples<- m.1$p.u.samples
 # y.samples<- m.1$p.y.samples
-samples<- cbind(m.1$p.beta.0.samples, m.1$p.beta.samples, m.1$p.sigma.eta.samples, m.1$p.theta.samples)
+samples<- cbind(m.1$p.beta.0.samples, m.1$p.beta.samples, m.1$p.sigma.eta.samples, m.1$p.theta.samples, t(m.1$p.u.samples))
 rm(m.1)
 
 ## define functions
