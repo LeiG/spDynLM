@@ -1,6 +1,10 @@
 ## apply stopping rule with ORIGINAL bm
 require(mcmcse)
 
+## set threshold for stopping rule
+args<-commandArgs(TRUE)
+eps<- args[1]
+
 ## mcmc samples
 # beta.0.samples<- read.table("beta.0.samples.txt")
 # beta.samples<- read.table("beta.samples.txt")
@@ -43,7 +47,7 @@ priors <- list("beta.0.Norm"=list(rep(0,p), diag(1000,p)),
                "sigma.eta.IW"=list(2, diag(0.001,p)))
 ##make symbolic model formula statement for each month
 mods <- lapply(paste(colnames(y.t),'elev',sep='~'), as.formula)
-n.samples <- 900000
+n.samples <- 2000000
 ## get MCMC samples
 m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), coords=coords,
                starting=starting, tuning=tuning, priors=priors, get.fitted =TRUE,
@@ -71,7 +75,6 @@ bm<- function(x){
 }
 
 ## stopping rule
-eps<- 0.05
 jump<- 20
 check<- 2^14
 z<- 1.96
@@ -88,8 +91,8 @@ while(1){
     ess.new<- std^2/mcse^2
     ess.app<- 4*(z/eps)^2
     out<- list(n= check, app= ess.app, old= ess.old, new= ess.new)
-    write.table(out, "output_origin.txt")
-    write.table(mcse, "mcse_origin.txt")
+    write.table(out, paste(eps, "output_origin.txt", sep="_"))
+    write.table(mcse, paste(eps, "mcse_origin.txt", sep="_"))
     break
   }
   

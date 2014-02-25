@@ -1,6 +1,10 @@
 ## apply stopping rule with ALTERNATIVE bm
 require(mcmcse)
 
+## set threshold for stopping rule
+args<-commandArgs(TRUE)
+eps<- args[1]
+
 ## mcmc samples
 # beta.0.samples<- read.table("beta.0.samples.txt")
 # beta.samples<- read.table("beta.samples.txt")
@@ -43,7 +47,7 @@ priors <- list("beta.0.Norm"=list(rep(0,p), diag(1000,p)),
                "sigma.eta.IW"=list(2, diag(0.001,p)))
 ##make symbolic model formula statement for each month
 mods <- lapply(paste(colnames(y.t),'elev',sep='~'), as.formula)
-n.samples <- 900000
+n.samples <- 2000000
 ## get MCMC samples
 m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), coords=coords,
                starting=starting, tuning=tuning, priors=priors, get.fitted =TRUE,
@@ -108,11 +112,11 @@ while(1){
     cond<- 2*z*tank.mcse-eps*sqrt(tank.std[3,]/(n-1))
     write.table(cond, "cond_alternative.txt")
     if(all(cond<=0)){
-      ess.new<- (tank.std[3,]/(n-1))/tank.mcse^2*n
+      ess.new<- (tank.std[3,]/(n-1)^2)/tank.mcse^2*n
       ess.app<- 4*(z/eps)^2
       out<- list(n= n, app= ess.app, new= ess.new)
-      write.table(out, "output_alternative.txt")
-      write.table(tank.mcse, "mcse_alternative.txt")
+      write.table(out, paste(eps, "output_alternative.txt", sep="_"))
+      write.table(tank.mcse, paste(eps, "mcse_alternative.txt", sep="_"))
       break
     }
   }
