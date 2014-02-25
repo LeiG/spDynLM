@@ -2,8 +2,8 @@
 require(mcmcse)
 
 ## set threshold for stopping rule
-args<-commandArgs(TRUE)
-eps<- args[1]
+# args<-commandArgs(TRUE)
+# eps<- args[1]
 
 ## mcmc samples
 # beta.0.samples<- read.table("beta.0.samples.txt")
@@ -75,6 +75,7 @@ bm<- function(x){
 }
 
 ## stopping rule
+eps<- 0.05
 jump<- 20
 check<- 2^14
 z<- 1.96
