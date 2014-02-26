@@ -53,6 +53,19 @@ m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), coords=coords,
 samples<- cbind(m.1$p.beta.0.samples, m.1$p.beta.samples, m.1$p.sigma.eta.samples, m.1$p.theta.samples, t(m.1$p.u.samples))
 rm(m.1)
 
+## define functions
+bm<- function(x){
+  n= length(x)
+  b= floor(sqrt(n))
+  a= floor(n/b)
+  
+  y = sapply(1:a, function(k) return(mean(x[((k - 1) * b + 1):(k * b)])))
+  mu.hat = mean(y)
+  var.hat = b * sum((y - mu.hat)^2)/(a - 1)
+  se = sqrt(var.hat/n)
+  return(se)
+}
+
 ## diagnostic
 burnin<- 5000
 n<- 10000
@@ -61,3 +74,7 @@ X<- samples[(burnin+1):(burnin+n),]
 diag<- unlist(geweke.diag(X))
 diag<- diag[1:(length(diag)-2)] #remove frac1 frac2
 length(which(2*pnorm(-abs(diag))<0.05))/dim(X)[2] #P(p-value < 0.05)
+
+## calculate mcse
+diag.mcse<- apply(X, 2, bm)
+write.table(diag.mcse, "mcse_geweke.txt")
