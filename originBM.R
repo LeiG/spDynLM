@@ -95,8 +95,8 @@ while(1){
     out<- list(n= check, app= ess.app, old= ess.old, new= ess.new)
     write.table(out, paste(eps, "output_origin.txt", sep="_"))
     write.table(mcse, paste(eps, "mcse_origin.txt", sep="_"))
-    write.table(sqrt(std, paste(eps, "sd_origin.txt", sep="_"))
-    write.table(sqrt(X.mean, paste(eps, "mean_origin.txt", sep="_"))
+    write.table(std, paste(eps, "sd_origin.txt", sep="_"))
+    write.table(X.mean, paste(eps, "mean_origin.txt", sep="_"))
     break
   }
   
