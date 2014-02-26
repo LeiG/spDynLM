@@ -117,6 +117,7 @@ while(1){
       out<- list(n= n, app= ess.app, new= ess.new)
       write.table(out, paste(eps, "output_alternative.txt", sep="_"))
       write.table(tank.mcse, paste(eps, "mcse_alternative.txt", sep="_"))
+      write.table(sqrt(tank.std[3,]/(n-1)), paste(eps, "sd_alternative.txt", sep="_"))
       break
     }
   }

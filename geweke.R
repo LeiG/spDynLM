@@ -77,4 +77,6 @@ length(which(2*pnorm(-abs(diag))<0.05))/dim(X)[2] #P(p-value < 0.05)
 
 ## calculate mcse
 diag.mcse<- apply(X, 2, bm)
+diag.sd<- apply(X, 2, sd)
 write.table(diag.mcse, "mcse_geweke.txt")
+write.table(diag.sd, paste(eps, "sd_geweke.txt", sep="_"))
