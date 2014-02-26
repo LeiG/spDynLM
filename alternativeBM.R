@@ -112,12 +112,14 @@ while(1){
     cond<- 2*z*tank.mcse-eps*sqrt(tank.std[3,]/(n-1))
     write.table(cond, paste(eps, "cond_alternative.txt", sep="_"))
     if(all(cond<=0)){
+      tank.mean<- apply(tank, 2, mean)
       ess.new<- (tank.std[3,]/(n-1)^2)/tank.mcse^2*n
       ess.app<- 4*(z/eps)^2
       out<- list(n= n, app= ess.app, new= ess.new)
       write.table(out, paste(eps, "output_alternative.txt", sep="_"))
       write.table(tank.mcse, paste(eps, "mcse_alternative.txt", sep="_"))
       write.table(sqrt(tank.std[3,]/(n-1)), paste(eps, "sd_alternative.txt", sep="_"))
+      write.table(tank.mean, paste(eps, "mean_alternative.txt", sep="_"))
       break
     }
   }
