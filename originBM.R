@@ -47,7 +47,7 @@ priors <- list("beta.0.Norm"=list(rep(0,p), diag(1000,p)),
                "sigma.eta.IW"=list(2, diag(0.001,p)))
 ##make symbolic model formula statement for each month
 mods <- lapply(paste(colnames(y.t),'elev',sep='~'), as.formula)
-n.samples <- 2000000
+n.samples <- 3000000
 ## get MCMC samples
 m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), coords=coords,
                starting=starting, tuning=tuning, priors=priors, get.fitted =TRUE,
@@ -77,21 +77,25 @@ bm<- function(x){
 ## stopping rule
 eps<- 0.05
 jump<- 20
-check<- 2^20
+check<- 2^14
 z<- 1.96
 while(1){
-  X<- samples[0:check,]
+#   X<- samples[0:check,]
   print(check)
   
-  mcse<- apply(X, 2, bm)
-  std<- apply(X, 2, sd)
+#   mcse<- apply(X, 2, bm)
+#   std<- apply(X, 2, sd)
+  mcse<- apply(samples[0:check,], 2, bm)
+  std<- apply(samples[0:check,], 2, sd)
   cond<- 2*z*mcse-eps*std #95% confidence
   write.table(cond, paste(eps, "cond_origin.txt", sep="_"))
   if(all(cond<=0)){
-    ess.old<- apply(X, 2, ess)
+#     ess.old<- apply(X, 2, ess)
+    ess.old<- apply(samples[0:check,], 2, ess)
     ess.new<- std^2/mcse^2
     ess.app<- 4*(z/eps)^2
-    X.mean<- apply(X, 2, mean)
+#     X.mean<- apply(X, 2, mean)
+    X.mean<- apply(samples[0:check,], 2, mean)
     out<- list(n= check, app= ess.app, old= ess.old, new= ess.new)
     write.table(out, paste(eps, "output_origin.txt", sep="_"))
     write.table(mcse, paste(eps, "mcse_origin.txt", sep="_"))
