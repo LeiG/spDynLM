@@ -77,7 +77,7 @@ bm<- function(x){
 ## stopping rule
 eps<- 0.05
 jump<- 20
-check<- 2^14
+check<- 2^20
 z<- 1.96
 while(1){
   X<- samples[0:check,]
