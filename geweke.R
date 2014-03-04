@@ -67,7 +67,7 @@ bm<- function(x){
 }
 
 ## diagnostic
-burnin<- 5000
+burnin<- 0
 n<- 10000
 X<- samples[(burnin+1):(burnin+n),]
 # boa.geweke(X, 0.1, 0.5)
@@ -79,6 +79,9 @@ length(which(2*pnorm(-abs(diag))<0.05))/dim(X)[2] #P(p-value < 0.05)
 diag.mcse<- apply(X, 2, bm)
 diag.sd<- apply(X, 2, sd)
 diag.mean<- apply(X, 2, mean)
+diag.ess.old<- apply(X, 2, ess)
+diag.ess.new<- diag.sd^2/diag.mcse^2
 write.table(diag.mcse, "mcse_geweke.txt")
 write.table(diag.sd, "sd_geweke.txt")
 write.table(diag.mean, "mean_geweke.txt")
+write.table(list(n=n, ess.old=diag.ess.old, ess.new=diag.ess.new), "output_geweke.txt")
