@@ -68,7 +68,7 @@ bm<- function(x){
 
 ## diagnostic
 burnin<- 0
-n<- 10000
+n<- 15000
 X<- samples[(burnin+1):(burnin+n),]
 # boa.geweke(X, 0.1, 0.5)
 diag<- unlist(geweke.diag(X))
