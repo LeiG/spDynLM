@@ -57,6 +57,7 @@ rm(m.1)
 
 ## stopping rule
 eps<- 0.05
+thres<- 6147
 z<- 1.96
 d<- dim(samples)[2]
 b.size<- c(2^7, 2^7)
@@ -109,17 +110,16 @@ while(1){
     }
     
     tank.mcse<- apply(tank, 2, sd)*sqrt(b.size[1]/n)
-    cond<- 2*z*tank.mcse-eps*sqrt(tank.std[3,]/(n-1))
-    write.table(cond, paste(eps, "cond_alternative.txt", sep="_"))
-    if(all(cond<=0)){
+    ess.alternative<- (tank.std[3,]/(n-1))/(tank.mcse^2)
+    write.table(ess.alternative, paste(thres, "ess_alternative.txt", sep="_"))
+    if(all(ess.alternative>thres)){
       tank.mean<- apply(tank, 2, mean)
-      ess.new<- (tank.std[3,]/(n-1))/(tank.mcse^2)
       ess.app<- 4*(z/eps)^2
-      out<- list(n= n, app= ess.app, new= ess.new)
-      write.table(out, paste(eps, "output_alternative.txt", sep="_"))
-      write.table(tank.mcse, paste(eps, "mcse_alternative.txt", sep="_"))
-      write.table(sqrt(tank.std[3,]/(n-1)), paste(eps, "sd_alternative.txt", sep="_"))
-      write.table(tank.mean, paste(eps, "mean_alternative.txt", sep="_"))
+      out<- list(n= n, app= ess.app, new= ess.alternative)
+      write.table(out, paste(thres, "output_ess_alternative.txt", sep="_"))
+      write.table(tank.mcse, paste(thres, "mcse_ess_alternative.txt", sep="_"))
+      write.table(sqrt(tank.std[3,]/(n-1)), paste(thres, "sd_ess_alternative.txt", sep="_"))
+      write.table(tank.mean, paste(thres, "mean_ess_alternative.txt", sep="_"))
       break
     }
   }
