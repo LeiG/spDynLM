@@ -3,8 +3,8 @@
 # Bayesian dynamic space-time models (Gelfand et al., 2005).
 #
 # The aim is to precisely estimate the "truth" of the parameters through many
-# parallel runs with sufficient length and use the "truth" in other programs 
-# to evaluate the performances of stopping criteria.
+# parallel runs with sufficient length in order use the "truth" in other 
+# programs to evaluate the performances of stopping criteria utilized.
 #-----------------------------------------------------------------------------
 
 require(spBayes)
@@ -36,7 +36,7 @@ priors <- list("beta.0.Norm"=list(rep(0,p), diag(1000,p)),
 mods <- lapply(paste(colnames(y.t),'elev',sep='~'), as.formula)
 
 #### generate MCMC samples ####
-n.samples <- 1000000
+n.samples <- 100000
 n.parallel<- 1000
 set.seed(3)
 sample.list<- list()
@@ -55,6 +55,7 @@ for(i in 1:n.parallel){
   sample.list[length(sample.list)+1]<- list(samples)
   rm(samples)
 }
+
 ## the truth
 sample.array<- simplify2array(sample.parallel)
 sample.truth<- c(apply(sample.array, c(1,2), mean),
