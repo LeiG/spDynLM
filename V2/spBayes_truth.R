@@ -27,7 +27,8 @@ starting <- list("beta"=rep(0,N.t*p), "phi"=rep(3/(0.5*max.d), N.t),
                  "sigma.eta"=diag(rep(0.01, p)))
 tuning <- list("phi"=rep(5, N.t))
 priors <- list("beta.0.Norm"=list(rep(0,p), diag(1000,p)),
-               "phi.Unif"=list(rep(3/(0.9*max.d), N.t), rep(3/(0.05*max.d), N.t)),
+               "phi.Unif"=list(rep(3/(0.9*max.d), N.t), 
+                               rep(3/(0.05*max.d), N.t)),
                "sigma.sq.IG"=list(rep(2,N.t), rep(10,N.t)),
                "tau.sq.IG"=list(rep(2,N.t), rep(5,N.t)),
                "sigma.eta.IW"=list(2, diag(0.001,p)))
@@ -35,23 +36,32 @@ priors <- list("beta.0.Norm"=list(rep(0,p), diag(1000,p)),
 mods <- lapply(paste(colnames(y.t),'elev',sep='~'), as.formula)
 
 #### generate MCMC samples ####
-n.samples <- 1000000
+n.samples <- 100
 n.parallel<- 1000
 set.seed(3)
 sample.means<- list()
+sample.sds<- list()
 for(i in 1:n.parallel){
   ## get MCMC samples
-  m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), coords=coords,
-                 starting=starting, tuning=tuning, priors=priors, get.fitted =TRUE,
-                 cov.model="exponential", n.samples=n.samples, n.report=0.1*n.samples)
-  samples<- cbind(m.1$p.beta.0.samples, m.1$p.beta.samples, m.1$p.sigma.eta.samples, m.1$p.theta.samples, t(m.1$p.u.samples))
+  m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), 
+                 coords=coords,starting=starting, tuning=tuning, 
+                 priors=priors, get.fitted =TRUE,cov.model="exponential",
+                 n.samples=n.samples, n.report=0.1*n.samples)
+  samples<- cbind(m.1$p.beta.0.samples, m.1$p.beta.samples, 
+                  m.1$p.sigma.eta.samples, m.1$p.theta.samples, 
+                  t(m.1$p.u.samples))
   rm(m.1)
   
   ## summary samples
   sample.means[length(sample.means)+1]<- list(apply(samples, 2, mean))
+  sample.sds[length(sample.sds)+1]<- list(apply(samples, 2, sd))
   rm(samples)
 }
 ## the truth
-sample.truth<- Reduce("+", lapply(sample.means, matrix)) / length(lapply(sample.means, matrix))
-write.table(sample.truth, "truth.txt")
+sample.truth<- cbind(Reduce("+", lapply(sample.means, matrix)) / 
+                   length(lapply(sample.means, matrix)),
+                 Reduce("+", lapply(sample.sds, matrix)) / 
+                   length(lapply(sample.sds, matrix)))
+write.table(sample.truth, "truth.txt", col.names=c("mean", "sd"),
+            row.names=FALSE)
 
