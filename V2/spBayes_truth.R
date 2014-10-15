@@ -36,10 +36,11 @@ priors <- list("beta.0.Norm"=list(rep(0,p), diag(1000,p)),
 mods <- lapply(paste(colnames(y.t),'elev',sep='~'), as.formula)
 
 #### generate MCMC samples ####
-n.samples <- 100000
+n.samples <- 1000000
 n.parallel<- 1000
 set.seed(3)
-sample.list<- list()
+sample.means<- list()
+sample.vars<- list()
 for(i in 1:n.parallel){
   ## get MCMC samples
   m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), 
@@ -52,14 +53,18 @@ for(i in 1:n.parallel){
   rm(m.1)
   
   ## summary samples
-  sample.list[length(sample.list)+1]<- list(samples)
+  sample.means[length(sample.means)+1]<- list(apply(samples, 2, mean))
+  sample.vars[length(sample.vars)+1]<- list(apply(samples, 2, var))
   rm(samples)
 }
 
 ## the truth
-sample.array<- simplify2array(sample.parallel)
-sample.truth<- c(apply(sample.array, c(1,2), mean),
-                 apply(sample.array, c(1,2), sd))
+sample.means<- simplify2array(sample.means)
+sample.vars<- simplify2array(sample.vars)
+pop.mean<- apply(sample.means, 1, mean)
+pop.var<- (n.samples-1)/(n.parallel*n.samples-1)*apply(sample.vars, 1, sum) +
+  n.samples/(n.parallel*n.samples-1)*apply((sample.means-pop.mean)^2, 1, sum)
+sample.truth<- c(pop.mean, pop.var)
 write.table(sample.truth, "truth.txt", col.names=c("mean", "sd"),
             row.names=FALSE)
 
