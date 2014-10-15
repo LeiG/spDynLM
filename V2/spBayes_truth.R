@@ -64,7 +64,7 @@ sample.vars<- simplify2array(sample.vars)
 pop.mean<- apply(sample.means, 1, mean)
 pop.var<- (n.samples-1)/(n.parallel*n.samples-1)*apply(sample.vars, 1, sum) +
   n.samples/(n.parallel*n.samples-1)*apply((sample.means-pop.mean)^2, 1, sum)
-sample.truth<- c(pop.mean, pop.var)
+sample.truth<- c(pop.mean, sqrt(pop.var))
 write.table(sample.truth, "truth.txt", col.names=c("mean", "sd"),
             row.names=FALSE)
 
