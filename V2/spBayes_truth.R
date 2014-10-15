@@ -56,6 +56,7 @@ for(i in 1:n.parallel){
   sample.means[length(sample.means)+1]<- list(apply(samples, 2, mean))
   sample.vars[length(sample.vars)+1]<- list(apply(samples, 2, var))
   rm(samples)
+  write.table(i, "counter.txt")
 }
 
 ## the truth
