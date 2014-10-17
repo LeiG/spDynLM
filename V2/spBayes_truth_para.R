@@ -3,11 +3,26 @@
 # Bayesian dynamic space-time models (Gelfand et al., 2005).
 #
 # The aim is to precisely estimate the "truth" of the parameters through many
-# parallel runs with sufficient length in order use the "truth" in other 
-# programs to evaluate the performances of stopping criteria utilized.
+# parallel runs with sufficient length using multiple cores. The "truth" is
+# used later in other programs to evaluate the performances of the stopping 
+# criteria utilized.
+#
+# input
+# ------
+# args: a unique integer (e.g. i) indicates that it is the i-th run. Check 
+# the spBayes_truth_para.sh file for more details.
+#
+# output
+# -------
+# arg[1]_truth.txt: p-by-2 matrix contains the estimated mean and standard 
+# deviation.
 #-----------------------------------------------------------------------------
 
 require(spBayes)
+
+#### set random seed ####
+args<-commandArgs(TRUE)
+set.seed(args[1])
 
 #### spatial Bayesian model setup ####
 ## manipulate raw data
@@ -36,35 +51,16 @@ priors <- list("beta.0.Norm"=list(rep(0,p), diag(1000,p)),
 mods <- lapply(paste(colnames(y.t),'elev',sep='~'), as.formula)
 
 #### generate MCMC samples ####
-n.samples <- 1000000
-n.parallel<- 100
-sample.means<- list()
-sample.vars<- list()
-for(i in 1:n.parallel){
-  ## get MCMC samples
-  m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), 
-                 coords=coords,starting=starting, tuning=tuning, 
-                 priors=priors, get.fitted =TRUE,cov.model="exponential",
-                 n.samples=n.samples, n.report=0.1*n.samples)
-  samples<- cbind(m.1$p.beta.0.samples, m.1$p.beta.samples, 
-                  m.1$p.sigma.eta.samples, m.1$p.theta.samples, 
-                  t(m.1$p.u.samples))
-  rm(m.1)
-  
-  ## summary samples
-  sample.means[length(sample.means)+1]<- list(apply(samples, 2, mean))
-  sample.vars[length(sample.vars)+1]<- list(apply(samples, 2, var))
-  rm(samples)
-  write.table(i, "counter.txt")
-}
-
-## the truth
-sample.means<- simplify2array(sample.means)
-sample.vars<- simplify2array(sample.vars)
-param.mean<- apply(sample.means, 1, mean)
-param.var<- (n.samples-1)/(n.parallel*n.samples-1)*apply(sample.vars, 1, sum) +
-  n.samples/(n.parallel*n.samples-1)*apply((sample.means-pop.mean)^2, 1, sum)
-sample.truth<- cbind(param.mean, sqrt(param.var))
-write.table(sample.truth, "truth.txt", col.names=c("mean", "sd"),
-            row.names=FALSE)
-
+n.samples <- 10000000
+## get MCMC samples
+m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), 
+               coords=coords,starting=starting, tuning=tuning, 
+               priors=priors, get.fitted =TRUE,cov.model="exponential",
+               n.samples=n.samples, n.report=0.1*n.samples)
+samples<- cbind(m.1$p.beta.0.samples, m.1$p.beta.samples, 
+                m.1$p.sigma.eta.samples, m.1$p.theta.samples, 
+                t(m.1$p.u.samples))
+rm(m.1)
+## summary samples
+sample.summary<- cbind(apply(samples, 2, mean), apply(samples, 2, var))
+write.table(sample.summary, paste(arg[1], "truth.txt", sep="_"), header = c("mean", "var"))
