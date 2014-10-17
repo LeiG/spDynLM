@@ -66,6 +66,7 @@ samples<- cbind(m.1$p.beta.0.samples, m.1$p.beta.samples,
                 m.1$p.sigma.eta.samples, m.1$p.theta.samples, 
                 t(m.1$p.u.samples))
 rm(m.1)
+print("Summary START!")
 ## summary samples
 sample.summary<- cbind(apply(samples, 2, mean), apply(samples, 2, var))
 write.table(sample.summary, paste(arg[1], "truth.txt", sep="_"), header = c("mean", "var"))
