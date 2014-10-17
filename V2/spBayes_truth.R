@@ -62,7 +62,7 @@ for(i in 1:n.parallel){
 sample.means<- simplify2array(sample.means)
 sample.vars<- simplify2array(sample.vars)
 param.mean<- apply(sample.means, 1, mean)
-param.var<- (n.samples-1)/(n.parallel*n.samples-1)*apply(sample.vars, 1, sum) +
+param.var<- (n.samples-1)/(n.parallel*n.samples-1)*apply(sample.vars, 1, sum)+
   n.samples/(n.parallel*n.samples-1)*apply((sample.means-pop.mean)^2, 1, sum)
 sample.truth<- cbind(param.mean, sqrt(param.var))
 write.table(sample.truth, "truth.txt", col.names=c("mean", "sd"),

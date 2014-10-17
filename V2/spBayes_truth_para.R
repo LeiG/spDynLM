@@ -16,9 +16,13 @@
 # -------
 # arg[1]_truth.txt: p-by-2 matrix contains the estimated mean and standard 
 # deviation.
+# arg[1]_time.txt: record the execution time in the user-system-elapsed order.
 #-----------------------------------------------------------------------------
 
 require(spBayes)
+
+#### record present time ####
+ptm<- proc.time()
 
 #### set random seed ####
 args<-commandArgs(TRUE)
@@ -64,3 +68,6 @@ rm(m.1)
 ## summary samples
 sample.summary<- cbind(apply(samples, 2, mean), apply(samples, 2, var))
 write.table(sample.summary, paste(arg[1], "truth.txt", sep="_"), header = c("mean", "var"))
+
+#### run time ####
+write((proc.time()-ptm)[1:3], paste(arg[1], "time.txt", sep="_"))
