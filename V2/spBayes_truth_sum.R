@@ -22,7 +22,7 @@ n.samples<- args[2]
 sample.means<- list()
 sample.vars<- list()
 for(i in 1:n.parallel){
-  sample<- read.table(i, "truth.txt", sep="_"), header = TRUE)
+  sample<- read.table(paste(i, "truth.txt", sep="_"), header = TRUE)
   sample.means[length(sample.means)+1]<- list(sample[,1])
   sample.vars[length(sample.vars)+1]<- list(sample[,2])
   rm(sample)
