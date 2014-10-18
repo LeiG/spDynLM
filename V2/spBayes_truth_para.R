@@ -69,7 +69,7 @@ rm(m.1)
 print("Summary START!")
 ## summary samples
 sample.summary<- cbind(apply(samples, 2, mean), apply(samples, 2, var))
-write.table(sample.summary, paste(arg[1], "truth.txt", sep="_"), col.names = c("mean", "var"))
+write.table(sample.summary, paste(args[1], "truth.txt", sep="_"), col.names = c("mean", "var"))
 
 #### run time ####
-write((proc.time()-ptm)[1:3], paste(arg[1], "time.txt", sep="_"))
+write((proc.time()-ptm)[1:3], paste(args[1], "time.txt", sep="_"))
