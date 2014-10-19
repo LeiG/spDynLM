@@ -15,8 +15,8 @@
 
 #### total number of parallel runs ####
 args<-commandArgs(TRUE)
-n.parallel<- args[1]
-n.samples<- args[2]
+n.parallel<- as.numeric(args[1])
+n.samples<- as.numeric(args[2])
 
 #### read files ####
 sample.means<- list()
