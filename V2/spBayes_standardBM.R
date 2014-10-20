@@ -42,7 +42,8 @@ priors <- list("beta.0.Norm"=list(rep(0,p), diag(1000,p)),
 mods <- lapply(paste(colnames(y.t),'elev',sep='~'), as.formula)
 
 #### generate MCMC samples ####
-n.samples <- 2000000
+n.samples<- 500000
+#n.samples<- 2000000
 m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), 
                coords=coords,starting=starting, tuning=tuning, 
                priors=priors,get.fitted =TRUE,cov.model="exponential",
@@ -84,10 +85,14 @@ while(1){
     ess.app<- 4*(z/eps)^2
     X.mean<- apply(samples[0:check,], 2, mean)
     out<- list(n= check, app= ess.app, old= ess.old, new= ess.new)
-    write.table(out, paste(n.ess, arg[1], "output_standard.txt", sep="_"))
-    write.table(mcse, paste(n.ess, arg[1], "mcse_standard.txt", sep="_"))
-    write.table(std, paste(n.ess, arg[1], "sd_standard.txt", sep="_"))
-    write.table(X.mean, paste(n.ess, arg[1], "mean_standard.txt", sep="_"))
+    write.table(out, paste(n.ess, args[1], "output_standard.txt", sep="_"),
+                row.names=FALSE)
+    write.table(mcse, paste(n.ess, args[1], "mcse_standard.txt", sep="_"),
+                row.names=FALSE)
+    write.table(std, paste(n.ess, args[1], "sd_standard.txt", sep="_"), 
+                row.names=FALSE)
+    write.table(X.mean, paste(n.ess, args[1], "mean_standard.txt", sep="_"), 
+                row.names=FALSE)
     break
   }
   
@@ -103,7 +108,11 @@ upper<- X.mean+z*mcse
 lower<- X.mean-z*mcse
 # coverage of the resulting confidence interval (0/1)
 prob.coverage<- matrix((truth[,1]>=lower)&(truth[,1]<=upper), ncol=1)*1
-write.table(prob.coverage, paste(n.ess, arg[1], "probcover_standard.txt", sep="_"))
+write.table(prob.coverage, 
+            paste(n.ess, args[1], "probcover_standard.txt", sep="_"),
+            row.names=FALSE)
 # distance between estimates and truth
 prob.distance<- matrix(abs(X.mean-truth[,1])>=eps*truth[,2], ncol=1)*1
-write.table(prob.distance, paste(n.ess, arg[1], "probdist_standard.txt", sep="_"))
+write.table(prob.distance, 
+            paste(n.ess, args[1], "probdist_standard.txt", sep="_"), 
+            row.names=FALSE)

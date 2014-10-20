@@ -45,11 +45,15 @@ priors <- list("beta.0.Norm"=list(rep(0,p), diag(1000,p)),
 mods <- lapply(paste(colnames(y.t),'elev',sep='~'), as.formula)
 
 #### generate MCMC samples ####
-n.samples <- 2000000
-m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), coords=coords,
-               starting=starting, tuning=tuning, priors=priors, get.fitted =TRUE,
-               cov.model="exponential", n.samples=n.samples, n.report=0.1*n.samples)
-samples<- cbind(m.1$p.beta.0.samples, m.1$p.beta.samples, m.1$p.sigma.eta.samples, m.1$p.theta.samples, t(m.1$p.u.samples))
+n.samples<- 500000
+#n.samples<- 2000000
+m.1<- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), 
+              coords=coords, starting=starting, tuning=tuning, priors=priors,
+              get.fitted =TRUE, cov.model="exponential", n.samples=n.samples,
+              n.report=0.1*n.samples)
+samples<- cbind(m.1$p.beta.0.samples, m.1$p.beta.samples, 
+                m.1$p.sigma.eta.samples, m.1$p.theta.samples,
+                t(m.1$p.u.samples))
 rm(m.1)
 
 #### apply stopping rule retrospectively ####
@@ -103,7 +107,9 @@ while(1){
     #check if batch size changes
     if(b.size[1] != b.size[2]){
       batch<- matrix(, b.size[1], d)
-      tank<- t(sapply(split.data.frame(tank, rep(1:(dim(tank)[1]/2), times=rep(2, (dim(tank)[1]/2)))), apply, 2, mean))
+      tank<- t(sapply(split.data.frame(
+        tank, rep(1:(dim(tank)[1]/2), 
+                  times=rep(2, (dim(tank)[1]/2)))), apply, 2, mean))
     }
     
     tank.mcse<- apply(tank, 2, sd)*sqrt(b.size[1]/n)
@@ -114,10 +120,14 @@ while(1){
       ess.new<- (tank.std[3,]/(n-1))/(tank.mcse^2)
       ess.app<- 4*(z/eps)^2
       out<- list(n= n, app= ess.app, new= ess.new)
-      write.table(out, paste(eps, arg[1], "output_new.txt", sep="_"))
-      write.table(tank.mcse, paste(eps, arg[1], "mcse_new.txt", sep="_"))
-      write.table(sqrt(tank.std[3,]/(n-1)), paste(eps, arg[1], "sd_new.txt", sep="_"))
-      write.table(tank.mean, paste(eps, arg[1], "mean_new.txt", sep="_"))
+      write.table(out, paste(eps, args[1], "output_new.txt", sep="_"), 
+                  row.names=FALSE)
+      write.table(tank.mcse, paste(eps, args[1], "mcse_new.txt", sep="_"), 
+                  row.names=FALSE)
+      write.table(sqrt(tank.std[3,]/(n-1)), 
+                  paste(eps, args[1], "sd_new.txt", sep="_"), row.names=FALSE)
+      write.table(tank.mean, paste(eps, args[1], "mean_new.txt", sep="_"), 
+                  row.names=FALSE)
       break
     }
   }
@@ -129,8 +139,12 @@ upper<- tank.mean+z*tank.mcse
 lower<- tank.mean-z*tank.mcse
 # coverage of the resulting confidence interval (0/1)
 prob.coverage<- matrix((truth[,1]>=lower)&(truth[,1]<=upper), ncol=1)*1
-write.table(prob.coverage, paste(n.ess, arg[1], "probcover_new.txt", sep="_"))
+write.table(prob.coverage, 
+            paste(n.ess, args[1], "probcover_new.txt", sep="_"), 
+            row.names=FALSE)
 # distance between estimates and truth
 prob.distance<- matrix(abs(tank.mean-truth[,1])>=eps*truth[,2], ncol=1)*1
-write.table(prob.distance, paste(n.ess, arg[1], "probdist_new.txt", sep="_"))
+write.table(prob.distance, 
+            paste(n.ess, args[1], "probdist_new.txt", sep="_"), 
+            row.names=FALSE)
 
