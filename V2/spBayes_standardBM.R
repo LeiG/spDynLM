@@ -78,7 +78,7 @@ while(1){
   mcse<- apply(samples[0:check,], 2, bm)
   std<- apply(samples[0:check,], 2, sd)
   cond<- 2*z*mcse-eps*std #95% confidence
-  write.table(cond, paste(n.ess, arg[1], "cond_standard.txt", sep="_"))
+  write.table(cond, paste(n.ess, args[1], "cond_standard.txt", sep="_"))
   if(all(cond<=0)){
     ess.old<- apply(samples[0:check,], 2, ess)
     ess.new<- std^2/mcse^2

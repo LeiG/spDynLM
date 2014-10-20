@@ -114,7 +114,7 @@ while(1){
     
     tank.mcse<- apply(tank, 2, sd)*sqrt(b.size[1]/n)
     cond<- 2*z*tank.mcse-eps*sqrt(tank.std[3,]/(n-1))
-    write.table(cond, paste(eps, arg[1], "cond_new.txt", sep="_"))
+    write.table(cond, paste(eps, args[1], "cond_new.txt", sep="_"))
     if(all(cond<=0)){
       tank.mean<- apply(tank, 2, mean)
       ess.new<- (tank.std[3,]/(n-1))/(tank.mcse^2)
