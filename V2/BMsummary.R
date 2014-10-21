@@ -29,12 +29,12 @@ n.ess<- as.numeric(args[3])
 prob.cover<- list()
 prob.dist<- list()
 for(i in 1:n.parallel){
-  coverage<- read.table(paste(n.ess, "_", i, "_", "probcover_", met, ".txt", 
-                            sep=""), header = TRUE, row.names = NULL)
-  distance<- read.table(paste(n.ess, "_", i, "_", "probdist_", met, ".txt", 
-                              sep=""), header = TRUE, row.names = NULL)
-  prob.cover[length(prob.cover)+1]<- list(coverage)
-  prob.dist[length(prob.dist)+1]<- list(distance)
+  prob.cover[length(prob.cover)+1]<- read.table(
+    paste(n.ess, "_", i, "_", "probcover_", met, ".txt", sep=""), 
+    header = TRUE, row.names = NULL)
+  prob.dist[length(prob.dist)+1]<- read.table(
+    paste(n.ess, "_", i, "_", "probdist_", met, ".txt", sep=""), 
+    header = TRUE, row.names = NULL)
 }
 
 #### estimate parameters ####
@@ -42,5 +42,7 @@ prob.cover<- simplify2array(prob.cover)
 prob.dist<- simplify2array(prob.dist)
 prob.cover<- apply(prob.cover, 1, mean)
 prob.dist<- apply(prob.dist, 1, mean)
-write.table(cbind(prob.cover, prob.dist), col.names=c("coverage", "distance"),
+write.table(cbind(prob.cover, prob.dist), 
+            paste(n.ess, met, "prob.txt", sep="_"), 
+            col.names=c("coverage", "distance"),
             row.names=FALSE)
