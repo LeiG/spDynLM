@@ -16,6 +16,7 @@
 # -------
 # arg[1]_truth.txt: p-by-2 matrix contains the estimated mean and standard 
 # deviation.
+#
 # arg[1]_time.txt: record the execution time in the user-system-elapsed order.
 #-----------------------------------------------------------------------------
 

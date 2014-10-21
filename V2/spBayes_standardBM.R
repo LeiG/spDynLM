@@ -6,6 +6,35 @@
 # implemented to terminate the MCMC simulation from the spDynLM() from the R 
 # package "spBayes". The evaluation of the performance is carried out by 
 # comparing to the "truth" from truth.txt.
+#
+# input
+# ------
+# args: a unique integer (e.g. i) indicates that it is the i-th run. Check 
+# the spBayes_newBM.sh file for more details.
+#
+# output
+# -------
+# "$n.ess"_args[1]_cond_standard.txt: 
+#
+# "$n.ess"_args[1]_output_standard.txt: matrix of parameter-wise total 
+# simulation effort, standard effective sample size and proposed effective 
+# sample size.
+#
+# "$n.ess"_args[1]_mcse_standard.txt: sequence of parameter-wise markov chain 
+# standard error.
+#
+# "$n.ess"_args[1]_sd_standard.txt: sequence of parameter-wise posterior 
+# standard deivation.
+#
+# "$n.ess"_args[1]_mean_standard.txt: sequence of parameter-wise posterior
+# mean.
+#
+# "$n.ess"_args[1]_probcover_standard.txt: 0/1 valued sequence used to 
+# estimate the coverage probabilities of each parameter.
+#
+# "$n.ess"_args[1]_probdist_standard.txt: 0/1 valued sequence used to estimate the
+# prob. of whether the distance of estimates from truth is larger than the
+# threshold.
 #-----------------------------------------------------------------------------
 
 require(mcmcse)

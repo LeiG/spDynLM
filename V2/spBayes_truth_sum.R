@@ -5,7 +5,9 @@
 #
 # input
 # ------
-# args: the totol number of parallel runs and the length of each run.
+# args[1]: the totol number of parallel runs
+#
+# args[2]: the length of each run.
 # 
 # output
 # -------
@@ -13,7 +15,7 @@
 # parameters from the parallel runs.
 #-----------------------------------------------------------------------------
 
-#### total number of parallel runs ####
+#### inputs ####
 args<-commandArgs(TRUE)
 n.parallel<- as.numeric(args[1])
 n.samples<- as.numeric(args[2])
