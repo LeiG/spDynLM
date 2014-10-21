@@ -114,19 +114,19 @@ while(1){
     
     tank.mcse<- apply(tank, 2, sd)*sqrt(b.size[1]/n)
     cond<- 2*z*tank.mcse-eps*sqrt(tank.std[3,]/(n-1))
-    write.table(cond, paste(eps, args[1], "cond_new.txt", sep="_"))
+    write.table(cond, paste(n.ess, args[1], "cond_new.txt", sep="_"))
     if(all(cond<=0)){
       tank.mean<- apply(tank, 2, mean)
       ess.new<- (tank.std[3,]/(n-1))/(tank.mcse^2)
       ess.app<- 4*(z/eps)^2
       out<- list(n= n, app= ess.app, new= ess.new)
-      write.table(out, paste(eps, args[1], "output_new.txt", sep="_"), 
+      write.table(out, paste(n.ess, args[1], "output_new.txt", sep="_"), 
                   row.names=FALSE)
-      write.table(tank.mcse, paste(eps, args[1], "mcse_new.txt", sep="_"), 
+      write.table(tank.mcse, paste(n.ess, args[1], "mcse_new.txt", sep="_"), 
                   row.names=FALSE)
       write.table(sqrt(tank.std[3,]/(n-1)), 
-                  paste(eps, args[1], "sd_new.txt", sep="_"), row.names=FALSE)
-      write.table(tank.mean, paste(eps, args[1], "mean_new.txt", sep="_"), 
+                  paste(n.ess, args[1], "sd_new.txt", sep="_"), row.names=FALSE)
+      write.table(tank.mean, paste(n.ess, args[1], "mean_new.txt", sep="_"), 
                   row.names=FALSE)
       break
     }
