@@ -88,7 +88,7 @@ samples<- cbind(m.1$p.beta.0.samples, m.1$p.beta.samples,
                 t(m.1$p.u.samples))
 rm(m.1)
 
-#### apply stopping rule retrospectively ####
+#### apply stopping rule (relative FWSR) retrospectively ####
 n.ess<- 1000
 #n.ess<- 5000
 z<- 1.96

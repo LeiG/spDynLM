@@ -100,7 +100,7 @@ bm<- function(x){
   return(se)
 }
 
-#### apply stopping rule retrospectively ####
+#### apply stopping rule (relative FWSR) retrospectively ####
 n.ess<- 1000
 #n.ess<- 5000
 z<- 1.96
