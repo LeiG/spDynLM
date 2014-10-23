@@ -22,12 +22,12 @@
 
 require(spBayes)
 
-#### record present time ####
-ptm<- proc.time()
-
 #### set random seed ####
 args<-commandArgs(TRUE)
 set.seed(args[1])
+
+#### record present time ####
+ptm<- proc.time()
 
 #### spatial Bayesian model setup ####
 ## manipulate raw data
