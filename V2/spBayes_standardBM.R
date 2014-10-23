@@ -29,6 +29,8 @@
 # "$n.ess"_args[1]_mean_standard.txt: sequence of parameter-wise posterior
 # mean.
 #
+# “$n.ess”_args[1]_time_standard.txt: record the actual run time.
+#
 # "$n.ess"_args[1]_probcover_standard.txt: 0/1 valued sequence used to 
 # estimate the coverage probabilities of each parameter.
 #
@@ -43,6 +45,9 @@ require(spBayes)
 #### set random seed ####
 args<-commandArgs(TRUE)
 set.seed(args[1])
+
+#### record present time ####
+ptm<- proc.time()
 
 #### spatial Bayesian model setup ####
 ## manipulate raw data
@@ -130,6 +135,9 @@ while(1){
   nbatch<- floor(check/b.size)
   if(!(nbatch%%2)){check<- check+b.size}
 }
+
+#### run time ####
+write((proc.time()-ptm)[1:3], paste(n.ess, args[1], "time_standard.txt", sep="_"))
 
 #### check coverage probability ####
 truth<- read.table("truth.txt", header = TRUE)
