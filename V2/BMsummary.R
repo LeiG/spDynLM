@@ -12,11 +12,12 @@
 #
 # output
 # ------
-# args[1]_args[2]_args[3]_cover.txt: sequence of parameter-wise coverage 
-# probabilities
+# args[1]_args[2]_args[3]_prob.txt: sequence of parameter-wise coverage 
+# probabilities and probability of whether the distance of estimates from 
+# truth is larger than the threshold
 #
-# args[1]_args[2]_args[3]_dist.txt: sequence of parameter-wise probability of
-# whether the distance of estimates from truth is larger than the threshold
+# args[1]_args[2]_args[3]_output.txt: summarized output includes average chain
+# length, average run time, average coverage probability and max Probability.
 #-----------------------------------------------------------------------------
 
 #### inputs ####
@@ -28,6 +29,8 @@ n.ess<- as.numeric(args[3])
 #### read files ####
 prob.cover<- list()
 prob.dist<- list()
+avg.time<- list()
+avg.length<- list()
 for(i in 1:n.parallel){
   prob.cover[length(prob.cover)+1]<- read.table(
     paste(n.ess, "_", i, "_", "probcover_", met, ".txt", sep=""), 
@@ -35,6 +38,12 @@ for(i in 1:n.parallel){
   prob.dist[length(prob.dist)+1]<- read.table(
     paste(n.ess, "_", i, "_", "probdist_", met, ".txt", sep=""), 
     header = TRUE, row.names = NULL)
+  avg.length[length(avg.length)+1]<- read.table(
+    paste(n.ess, "_", i, "_", "output_", met, ".txt", sep=""), 
+    header = TRUE, row.names = NULL)[,1]
+  avg.time[length(avg.time)+1]<- read.table(
+    paste(n.ess, "_", i, "_", "time_", met, ".txt", sep=""), 
+    header = TRUE, row.names = NULL)[,1]
 }
 
 #### estimate parameters ####
@@ -45,4 +54,14 @@ prob.dist<- apply(prob.dist, 1, mean)
 write.table(cbind(prob.cover, prob.dist), 
             paste(n.ess, met, "prob.txt", sep="_"), 
             col.names=c("coverage", "distance"),
+            row.names=FALSE)
+avg.length<- simplify2array(avg.length)
+avg.time<- simplify2array(avg.time)
+avg.length<- mean(avg.length)
+avg.time<- mean(avg.time)
+avg.cover<- mean(prob.cover)
+max.dist<- max(prob.dist)
+write.table(c(avg.length, avg.time, avg.cover, max.dist), 
+            paste(n.ess, met, "output.txt", sep="_"),
+            col.names=c("length", "time", "coverage", "maxProb"),
             row.names=FALSE)
