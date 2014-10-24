@@ -40,10 +40,10 @@ for(i in 1:n.parallel){
     header = TRUE, row.names = NULL)
   avg.length[length(avg.length)+1]<- read.table(
     paste(n.ess, "_", i, "_", "output_", met, ".txt", sep=""), 
-    header = TRUE, row.names = NULL)[,1]
+    header = TRUE, row.names = NULL)[1]
   avg.time[length(avg.time)+1]<- read.table(
     paste(n.ess, "_", i, "_", "time_", met, ".txt", sep=""), 
-    header = TRUE, row.names = NULL)[,1]
+    row.names = NULL)[1]
 }
 
 #### estimate parameters ####
