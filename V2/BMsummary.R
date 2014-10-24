@@ -61,7 +61,7 @@ avg.length<- mean(avg.length)
 avg.time<- mean(avg.time)
 avg.cover<- mean(prob.cover)
 max.dist<- max(prob.dist)
-write.table(c(avg.length, avg.time, avg.cover, max.dist), 
+write.table(matrix(c(avg.length, avg.time, avg.cover, max.dist), nrow=1), 
             paste(n.ess, met, "output.txt", sep="_"),
             col.names=c("length", "time", "coverage", "maxProb"),
             row.names=FALSE)
