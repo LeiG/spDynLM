@@ -92,7 +92,7 @@ rm(m.1)
 n.ess<- 1000
 #n.ess<- 5000
 z<- 1.96
-eps<- sqrt(4*1.96^2/n.ess) # equivalence between ess and eps
+eps<- sqrt(4*z^2/n.ess) # equivalence between ess and eps
 d<- dim(samples)[2]
 b.size<- c(2^7, 2^7)
 b.range<- 2^seq(7, 15)
@@ -129,8 +129,8 @@ while(1){
   }
   
   # check every 20/21 batches
-  if((n>=2^14) && (batch.count>20) && (!(dim(tank)[1]%%2))){
-    print(n)
+  if((n>=2^14) && (batch.count>=20) && (!(dim(tank)[1]%%2))){
+    #print(n)
     batch.count<- 1
     b.size[2]<- b.size[1]
     b.size[1]<- 2^max(which(sqrt(n)>=b.range)+6)

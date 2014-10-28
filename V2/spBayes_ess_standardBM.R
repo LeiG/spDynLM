@@ -75,9 +75,9 @@ priors <- list("beta.0.Norm"=list(rep(0,p), diag(1000,p)),
 ##make symbolic model formula statement for each month
 mods <- lapply(paste(colnames(y.t),'elev',sep='~'), as.formula)
 
-
-n.samples <- 3000000
-## get MCMC samples
+#### generate MCMC samples ####
+n.samples<- 500000
+#n.samples<- 2000000
 m.1 <- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), 
                coords=coords,starting=starting, tuning=tuning, priors=priors,
                get.fitted =TRUE,cov.model="exponential", n.samples=n.samples,

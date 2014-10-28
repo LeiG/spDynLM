@@ -131,7 +131,7 @@ while(1){
   
   # check every 20/21 batches
   if((n>=2^14) && (batch.count>20) && (!(dim(tank)[1]%%2))){
-    print(n)
+    #print(n)
     batch.count<- 1
     b.size[2]<- b.size[1]
     b.size[1]<- 2^max(which(sqrt(n)>=b.range)+6)
@@ -148,7 +148,7 @@ while(1){
     
     tank.mcse<- apply(tank, 2, sd)*sqrt(b.size[1]/n)
     ess.new<- (tank.std[3,]/(n-1))/(tank.mcse^2)
-    write.table(ess.new, paste(n.ess, args[1], "cond_ess_new", sep="_"))
+    write.table(ess.new, paste(n.ess, args[1], "cond_ess_new.txt", sep="_"))
     if(all(ess.new>=n.ess)){
       tank.mean<- apply(tank, 2, mean)
       ess.app<- 4*(z/eps)^2

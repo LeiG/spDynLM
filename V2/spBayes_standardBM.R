@@ -104,7 +104,7 @@ bm<- function(x){
 n.ess<- 1000
 #n.ess<- 5000
 z<- 1.96
-eps<- sqrt(4*1.96^2/n.ess) # equivalence between ess and eps
+eps<- sqrt(4*z^2/n.ess) # equivalence between ess and eps
 jump<- 20
 check<- 2^14
 while(1){
