@@ -47,7 +47,7 @@ args<-commandArgs(TRUE)
 set.seed(args[1])
 
 #### record present time ####
-ptm<- proc.time()
+# ptm<- proc.time()
 
 #### spatial Bayesian model setup ####
 ## manipulate raw data
@@ -86,6 +86,9 @@ samples<- cbind(m.1$p.beta.0.samples, m.1$p.beta.samples,
                 m.1$p.sigma.eta.samples, m.1$p.theta.samples,
                 t(m.1$p.u.samples))
 rm(m.1)
+
+#### record present time ####
+ptm<- proc.time()
 
 ## define functions
 bm<- function(x){
