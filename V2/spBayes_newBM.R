@@ -97,7 +97,8 @@ n.ess<- 1000
 z<- 1.96
 eps<- sqrt(4*z^2/n.ess) # equivalence between ess and eps
 d<- dim(samples)[2]
-b.size<- c(2^7, 2^7)
+#b.size<- c(2^7, 2^7) # lower bound
+b.size<- c(2^8, 2^8) # upper bound
 b.range<- 2^seq(7, 15)
 batch<- matrix(, b.size[1], d)
 b.count<- 0 # number of iterations within batch
@@ -136,7 +137,8 @@ while(1){
     #print(n)
     batch.count<- 1
     b.size[2]<- b.size[1]
-    b.size[1]<- 2^max(which(sqrt(n)>=b.range)+6)
+#     b.size[1]<- 2^max(which(sqrt(n)>=b.range)+6)  # lower bound
+    b.size[1]<- 2^max(which(sqrt(n)>=b.range)+7) # upper bound
     nbatch<- floor(n/b.size[1])
     
     #check if batch size changes
