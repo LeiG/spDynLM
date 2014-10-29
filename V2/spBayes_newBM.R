@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------
-# This package use the new batch means (BM) calculation in the relative
+# This program use the new batch means (BM) calculation in the relative
 # standard deviation fixed-width stopping rule. The new method does not 
 # require the storage of the entire chain for recalculation purposes. It 
 # significantly reduces the memory usage from O(n) to O(n^(1-\tau)), where a 
@@ -161,7 +161,7 @@ while(1){
       write.table(tank.mcse, paste(n.ess, args[1], "mcse_new.txt", sep="_"), 
                   row.names=FALSE)
       write.table(sqrt(tank.std[3,]/(n-1)), 
-                  paste(n.ess, args[1], "sd_new.txt", sep="_"), row.names=FALSE)
+                  paste(n.ess,args[1],"sd_new.txt",sep="_"), row.names=FALSE)
       write.table(tank.mean, paste(n.ess, args[1], "mean_new.txt", sep="_"), 
                   row.names=FALSE)
       break

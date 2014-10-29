@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------
-# This package use the new batch means (BM) calculation to estimate the markov
+# This program use the new batch means (BM) calculation to estimate the markov
 # standard error. The new method does not require the storage of the entire 
 # chain for recalculation purposes. It significantly reduces the memory usage 
 # from O(n) to O(n^(1-\tau)), where a common choice of \tau is 1/2.
@@ -12,7 +12,7 @@
 # input
 # ------
 # args: a unique integer (e.g. i) indicates that it is the i-th run. Check 
-# the spBayes_newBM.sh file for more details.
+# the spBayes_ess_newBM.sh file for more details.
 #
 # output
 # -------
@@ -159,7 +159,7 @@ while(1){
       out<- list(n= n, app= ess.app, new= ess.new)
       write.table(out, paste(n.ess, args[1], "output_ess_new.txt", sep="_"),
                   row.names=FALSE)
-      write.table(tank.mcse, paste(n.ess, args[1], "mcse_ess_new.txt", sep="_"),
+      write.table(tank.mcse, paste(n.ess,args[1],"mcse_ess_new.txt", sep="_"),
                   row.names=FALSE)
       write.table(sqrt(tank.std[3,]/(n-1)), 
                   paste(n.ess, args[1], "sd_ess_new.txt", sep="_"),

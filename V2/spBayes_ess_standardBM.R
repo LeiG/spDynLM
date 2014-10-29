@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------
-# This package use the standard batch means (BM) calculation in the relative
+# This program use the standard batch means (BM) calculation in the relative
 # standard deviation fixed-width stopping rule.
 #
 # The effective sample size(ESS) as stopping criterion with tunable parameters
@@ -10,7 +10,7 @@
 # input
 # ------
 # args: a unique integer (e.g. i) indicates that it is the i-th run. Check 
-# the spBayes_standardBM.sh file for more details.
+# the spBayes_ess_standardBM.sh file for more details.
 #
 # output
 # -------
@@ -90,7 +90,7 @@ rm(m.1)
 #### record present time ####
 ptm<- proc.time()
 
-## define functions
+#### apply stopping rule (relative FWSR) retrospectively ####
 bm<- function(x){
   n= length(x)
   b= floor(sqrt(n))
@@ -103,7 +103,6 @@ bm<- function(x){
   return(se)
 }
 
-#### apply stopping rule (relative FWSR) retrospectively ####
 n.ess<- 1000
 #n.ess<- 5000
 jump<- 20
@@ -121,13 +120,13 @@ while(1){
     ess.app<- 4*(z/eps)^2
     X.mean<- apply(samples[0:check,], 2, mean)
     out<- list(n= check, app= ess.app, old= ess.old, new= ess.standard)
-    write.table(out, paste(n.ess, args[1], "output_ess_standard.txt", sep="_"),
+    write.table(out, paste(n.ess, args[1],"output_ess_standard.txt",sep="_"),
                 row.names=FALSE)
     write.table(mcse, paste(n.ess, args[1], "mcse_ess_standard.txt", sep="_"),
                 row.names=FALSE)
     write.table(std, paste(n.ess, args[1], "sd_ess_standard.txt", sep="_"),
                 row.names=FALSE)
-    write.table(X.mean, paste(n.ess, args[1], "mean_ess_standard.txt", sep="_"),
+    write.table(X.mean, paste(n.ess, args[1],"mean_ess_standard.txt",sep="_"),
                 row.names=FALSE)
     break
   }

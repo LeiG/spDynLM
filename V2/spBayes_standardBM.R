@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------
-# This package use the standard batch means (BM) calculation in the relative
+# This program use the standard batch means (BM) calculation in the relative
 # standard deviation fixed-width stopping rule.
 #
 # The stopping criterion with tunable parameters (epsilon, delta) is 
@@ -10,7 +10,7 @@
 # input
 # ------
 # args: a unique integer (e.g. i) indicates that it is the i-th run. Check 
-# the spBayes_newBM.sh file for more details.
+# the spBayes_standardBM.sh file for more details.
 #
 # output
 # -------
@@ -34,8 +34,8 @@
 # "$n.ess"_args[1]_probcover_standard.txt: 0/1 valued sequence used to 
 # estimate the coverage probabilities of each parameter.
 #
-# "$n.ess"_args[1]_probdist_standard.txt: 0/1 valued sequence used to estimate the
-# prob. of whether the distance of estimates from truth is larger than the
+# "$n.ess"_args[1]_probdist_standard.txt: 0/1 valued sequence used to estimate 
+# the prob. of whether the distance of estimates from truth is larger than the
 # threshold.
 #-----------------------------------------------------------------------------
 
@@ -90,7 +90,7 @@ rm(m.1)
 #### record present time ####
 ptm<- proc.time()
 
-## standard BM
+#### apply stopping rule (relative FWSR) retrospectively ####
 bm<- function(x){
   n= length(x)
   b= floor(sqrt(n))
@@ -103,7 +103,6 @@ bm<- function(x){
   return(se)
 }
 
-#### apply stopping rule (relative FWSR) retrospectively ####
 n.ess<- 1000
 #n.ess<- 5000
 z<- 1.96
@@ -140,7 +139,8 @@ while(1){
 }
 
 #### run time ####
-write((proc.time()-ptm)[1:3], paste(n.ess, args[1], "time_standard.txt", sep="_"))
+write((proc.time()-ptm)[1:3], 
+      paste(n.ess, args[1], "time_standard.txt", sep="_"))
 
 #### check coverage probability ####
 truth<- read.table("truth.txt", header = TRUE)
