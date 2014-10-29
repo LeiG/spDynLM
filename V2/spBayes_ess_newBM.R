@@ -137,7 +137,8 @@ while(1){
     #print(n)
     batch.count<- 1
     b.size[2]<- b.size[1]
-    b.size[1]<- 2^max(which(sqrt(n)>=b.range)+6)
+#     b.size[1]<- 2^max(which(sqrt(n)>=b.range)+6)  # lower bound
+    b.size[1]<- 2^min(which(sqrt(n)<=b.range)+6) # upper bound
     nbatch<- floor(n/b.size[1])
     
     #check if batch size changes
