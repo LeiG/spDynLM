@@ -105,11 +105,14 @@ diag.sd<- apply(X, 2, sd)
 diag.mean<- apply(X, 2, mean)
 diag.ess.old<- apply(X, 2, ess)
 diag.ess.new<- diag.sd^2/diag.mcse^2
-write.table(diag.mcse, paste(args[1], "mcse_geweke.txt"), row.names=FALSE)
-write.table(diag.sd, paste(args[1], "sd_geweke.txt"), row.names=FALSE)
-write.table(diag.mean, paste(args[1], "mean_geweke.txt"), row.names=FALSE)
+write.table(diag.mcse, paste(args[1], "mcse_geweke.txt", sep="_"), 
+            row.names=FALSE)
+write.table(diag.sd, paste(args[1], "sd_geweke.txt", sep="_"), 
+            row.names=FALSE)
+write.table(diag.mean, paste(args[1], "mean_geweke.txt", sep="_"), 
+            row.names=FALSE)
 write.table(list(n=n, ess.old=diag.ess.old, ess.new=diag.ess.new),
-            paste(args[1], "output_geweke.txt"), row.names=FALSE)
+            paste(args[1], "output_geweke.txt", sep="_"), row.names=FALSE)
 
 #### run time ####
 write((proc.time()-ptm)[1:3], 
