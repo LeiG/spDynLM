@@ -37,9 +37,6 @@ require(spBayes)
 args<-commandArgs(TRUE)
 set.seed(args[1])
 
-#### record present time ####
-ptm<- proc.time()
-
 #### spatial Bayesian model setup ####
 ## manipulate raw data
 data("NETemp.dat")
@@ -89,10 +86,13 @@ bm<- function(x){
   return(se)
 }
 
+#### record present time ####
+ptm<- proc.time()
+
 #### check diagnostic ####
-burnin<- 500
+burnin<- 1000
 z<- 1.96
-n<- 20000
+n<- 15000
 X<- samples[(burnin+1):(burnin+n),]
 # boa.geweke(X, 0.1, 0.5)
 diag<- unlist(geweke.diag(X))
