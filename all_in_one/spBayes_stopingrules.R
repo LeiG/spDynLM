@@ -200,7 +200,7 @@ while(1){
     ess.old<- apply(samples[0:check,], 2, ess)
     ess.app<- 4*(z/eps[i[2]])^2
     X.mean<- apply(samples[0:check,], 2, mean)
-    sBM.out<- list(n= check, app= ess.app, old= ess.old, new= ess.standard)
+    sBM.out<- list(n= check, app= ess.app, old= ess.old)
     write.table(sBM.out, 
                 paste(args[1],n.ess[i[2]],"ess_standard_output.txt",sep="_"),
                 row.names=FALSE)
