@@ -1,6 +1,6 @@
 .DS_Store
 .RData
 .Rhistory
-experiments/.txt
-all_in_one/.txt
-first_submission/.txt
+experiments/*.txt
+all_in_one/*.txt
+first_submission/*.txt
