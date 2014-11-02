@@ -126,7 +126,7 @@ X<- samples[(burn_in+1):(burn_in+n.geweke),]
 diag<- unlist(geweke.diag(X))
 diag<- diag[1:(length(diag)-2)] #remove frac1 frac2
 # check if P(p-value < 0.05)
-print(length(which(2*pnorm(-abs(diag))<0.05))/dim(X)[2])
+#print(length(which(2*pnorm(-abs(diag))<0.05))/dim(X)[2])
 ## calculate mcse
 diag.mcse<- apply(X, 2, bm)
 diag.sd<- apply(X, 2, sd)
@@ -154,6 +154,9 @@ prob.coverage<- matrix((truth[,1]>=lower)&(truth[,1]<=upper), ncol=1)*1
 write.table(prob.coverage, 
             paste("./geweke/", args[1], "_geweke_probcover.txt", sep=""),
             row.names=FALSE)
+rm(n.geweke, burn_in, X, diag, diag.mcse, diag.sd, diag.mean, 
+   diag.ess.new, diag.ess.old, upper, lower, prob.coverage)
+print("==============Geweke finished================")
 
 ## standard batch means ######################################################
 i<- matrix(1, ncol = 2) # indicator of the tuning parameter value
@@ -218,7 +221,7 @@ while(1){
   if(all(cond>=n.ess[i[2]])){
     ess.old<- apply(samples[0:check,], 2, ess)
     ess.app<- 4*(z/eps[i[2]])^2
-    X.mean<- apply(samples[0:check,], 2, mean)
+    sBM.mean<- apply(samples[0:check,], 2, mean)
     sBM.out<- list(n= check, app= ess.app, old= ess.old)
     write.table(sBM.out, 
                 paste("./sBM_ess/", args[1], "_", n.ess[i[2]],
@@ -265,6 +268,9 @@ while(1){
   
   if(all(i == 4)){break}
 }
+rm(i, sBM.mcse, sBM.sd, cond, ess.old, ess.new, sBM.mean, sBM.out, prob.distance,
+   prob.coverage, upper, lower)
+print("==============sBM finished================")
 
 ## proposed lower bound batch means ##########################################
 i<- matrix(1, ncol = 2) # indicator of the tuning parameter value
@@ -416,6 +422,10 @@ while(1){
 
   if(all(i == 4)){break}
 }
+rm(i, d, b.size, b.range, batch, b.count, batch.count, tank.std,
+   tank, nbatch, tank.mcse, cond, tank.mean, ess.new, ess.app, 
+   out, prob.coverage, prob.distance)
+print("==============nBM_lower finished================")
 
 ## proposed upper bound batch means ##########################################
 i<- matrix(1, ncol = 2) # indicator of the tuning parameter value
@@ -566,6 +576,9 @@ while(1){
   
   if(all(i == 4)){break}
 }
-
+rm(i, d, b.size, b.range, batch, b.count, batch.count, tank.std,
+   tank, nbatch, tank.mcse, cond, tank.mean, ess.new, ess.app, 
+   out, prob.coverage, prob.distance)
+print("==============nBM_upper finished================")
 
 
