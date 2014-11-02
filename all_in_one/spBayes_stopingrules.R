@@ -50,6 +50,15 @@ require(coda)
 args<-commandArgs(TRUE)
 set.seed(args[1])
 
+#### mk directories to store results ####
+if(!file.exists("./geweke")){dir.create("./geweke")}
+if(!file.exists("./sBM")){dir.create("./sBM")}
+if(!file.exists("./sBM_ess")){dir.create("./sBM_ess")}
+if(!file.exists("./nBM_lower")){dir.create("./nBM_lower")}
+if(!file.exists("./nBM_lower_ess")){dir.create("./nBM_lower_ess")}
+if(!file.exists("./nBM_upper")){dir.create("./nBM_upper")}
+if(!file.exists("./nBM_upper_ess")){dir.create("./nBM_upper_ess")}
+
 #### pre-estimated truth ####
 truth<- read.table("truth.txt", header = TRUE)
 
@@ -233,7 +242,7 @@ while(1){
     # coverage of the resulting confidence interval (0/1)
     prob.coverage<- matrix((truth[,1]>=lower)&(truth[,1]<=upper), ncol=1)*1
     write.table(prob.coverage, 
-                paste("./sBM_ess/", args[1], "_", n.ess[i[1]],
+                paste("./sBM_ess/", args[1], "_", n.ess[i[2]],
                       "_ess_standard_probcover.txt", sep=""),
                 row.names=FALSE)
     # distance between estimates and truth
