@@ -79,7 +79,7 @@ priors <- list("beta.0.Norm"=list(rep(0,p), diag(1000,p)),
 mods <- lapply(paste(colnames(y.t),'elev',sep='~'), as.formula)
 
 #### generate MCMC samples ####
-#n.samples<- 3000000
+n.samples<- 3000000
 n.samples<- 30000
 m.1<- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), 
               coords=coords, starting=starting, tuning=tuning, priors=priors,
@@ -125,22 +125,26 @@ diag.sd<- apply(X, 2, sd)
 diag.mean<- apply(X, 2, mean)
 diag.ess.old<- apply(X, 2, ess)
 diag.ess.new<- diag.sd^2/diag.mcse^2
-write.table(diag.mcse, paste(args[1], "geweke_mcse.txt", sep="_"), 
+write.table(diag.mcse, 
+            paste("./geweke/", args[1], "_geweke_mcse.txt", sep=""), 
             row.names=FALSE)
-write.table(diag.sd, paste(args[1], "geweke_sd.txt", sep="_"), 
+write.table(diag.sd, 
+            paste("./geweke/", args[1], "_geweke_sd.txt", sep=""), 
             row.names=FALSE)
-write.table(diag.mean, paste(args[1], "geweke_mean.txt", sep="_"), 
+write.table(diag.mean, 
+            paste("./geweke/", args[1], "_geweke_mean.txt", sep=""), 
             row.names=FALSE)
 write.table(list(n=n, ess.old=diag.ess.old, ess.new=diag.ess.new),
-            paste(args[1], "geweke_output.txt", sep="_"), row.names=FALSE)
+            paste("./geweke/", args[1], "_geweke_output.txt", sep=""),
+            row.names=FALSE)
 write((proc.time()-ptm)[1:3], 
-      paste(args[1], "geweke_time.txt", sep="_"))
+      paste("./geweke/", args[1], "_geweke_time.txt", sep=""))
 ## coverage probabilities
 upper<- diag.mean+z*diag.mcse
 lower<- diag.mean-z*diag.mcse
 prob.coverage<- matrix((truth[,1]>=lower)&(truth[,1]<=upper), ncol=1)*1
 write.table(prob.coverage, 
-            paste(args[1], "geweke_probcover.txt", sep="_"),
+            paste("./geweke/", args[1], "_geweke_probcover.txt", sep=""),
             row.names=FALSE)
 
 ## standard batch means ######################################################
@@ -164,32 +168,39 @@ while(1){
     sBM.mean<- apply(samples[0:check,], 2, mean)
     sBM.out<- list(n= check, app= ess.app, old= ess.old, new= ess.new)
     write.table(sBM.out, 
-                paste(args[1], n.ess[i[1]], "standard_output.txt", sep="_"),
+                paste("./sBM/", args[1], "_", n.ess[i[1]], 
+                      "_standard_output.txt", sep=""),
                 row.names=FALSE)
     write.table(sBM.mcse, 
-                paste(args[1], n.ess[i[1]], "standard_mcse.txt", sep="_"),
+                paste("./sBM/", args[1], "_", n.ess[i[1]],
+                      "_standard_mcse.txt", sep=""),
                 row.names=FALSE)
     write.table(sBM.sd, 
-                paste(args[1], n.ess[i[1]], "standard_sd.txt", sep="_"), 
+                paste("./sBM/", args[1], "_", n.ess[i[1]], 
+                      "_standard_sd.txt", sep=""), 
                 row.names=FALSE)
     write.table(sBM.mean, 
-                paste(args[1], n.ess[i[1]], "standard_mean.txt", sep="_"), 
+                paste("./sBM/", args[1], "_", n.ess[i[1]], 
+                      "_standard_mean.txt", sep=""), 
                 row.names=FALSE)
     upper<- sBM.mean+z*sBM.mcse
     lower<- sBM.mean-z*sBM.mcse
     # coverage of the resulting confidence interval (0/1)
     prob.coverage<- matrix((truth[,1]>=lower)&(truth[,1]<=upper), ncol=1)*1
     write.table(prob.coverage, 
-                paste(args[1],n.ess[i[1]],"standard_probcover.txt", sep="_"),
+                paste("./sBM/", args[1], "_", n.ess[i[1]],
+                      "_standard_probcover.txt", sep=""),
                 row.names=FALSE)
     # distance between estimates and truth
     prob.distance<- matrix(abs(sBM.mean-truth[,1])>=eps[i[1]]*truth[,2], 
                            ncol=1)*1
     write.table(prob.distance, 
-                paste(args[1],n.ess[i[1]],"standard_probdist.txt", sep="_"), 
+                paste("./sBM/", args[1], "_", n.ess[i[1]],
+                      "_standard_probdist.txt", sep=""), 
                 row.names=FALSE)
     write((proc.time()-ptm)[1:3], 
-          paste(args[1], n.ess[i[1]], "standard_time.txt", sep="_"))
+          paste("./sBM/", args[1], "_", n.ess[i[1]], 
+                "_standard_time.txt", sep=""))
     
     i[1]= i[1]+1
   }
@@ -202,34 +213,39 @@ while(1){
     X.mean<- apply(samples[0:check,], 2, mean)
     sBM.out<- list(n= check, app= ess.app, old= ess.old)
     write.table(sBM.out, 
-                paste(args[1],n.ess[i[2]],"ess_standard_output.txt",sep="_"),
+                paste("./sBM_ess/", args[1], "_", n.ess[i[2]],
+                      "_ess_standard_output.txt",sep=""),
                 row.names=FALSE)
     write.table(sBM.mcse, 
-                paste(args[1], n.ess[i[2]], "ess_standard_mcse.txt", sep="_"),
+                paste("./sBM_ess/", args[1], "_", n.ess[i[2]], 
+                      "_ess_standard_mcse.txt", sep=""),
                 row.names=FALSE)
     write.table(sBM.sd, 
-                paste(args[1], n.ess[i[2]], "ess_standard_sd.txt", sep="_"),
+                paste("./sBM_ess/", args[1], "_", n.ess[i[2]], 
+                      "_ess_standard_sd.txt", sep=""),
                 row.names=FALSE)
     write.table(sBM.mean, 
-                paste(args[1], n.ess[i[2]], "ess_standard_mean.txt",sep="_"),
+                paste("./sBM_ess/", args[1], "_", n.ess[i[2]], 
+                      "_ess_standard_mean.txt",sep=""),
                 row.names=FALSE)
     upper<- sBM.mean+z*sBM.mcse
     lower<- sBM.mean-z*sBM.mcse
     # coverage of the resulting confidence interval (0/1)
     prob.coverage<- matrix((truth[,1]>=lower)&(truth[,1]<=upper), ncol=1)*1
     write.table(prob.coverage, 
-                paste(args[1],n.ess[i[1]],
-                      "ess_standard_probcover.txt", sep="_"),
+                paste("./sBM_ess/", args[1], "_", n.ess[i[1]],
+                      "_ess_standard_probcover.txt", sep=""),
                 row.names=FALSE)
     # distance between estimates and truth
     prob.distance<- matrix(abs(sBM.mean-truth[,1])>=eps[i[2]]*truth[,2], 
                            ncol=1)*1
     write.table(prob.distance, 
-                paste(args[1],n.ess[i[2]],
-                      "ess_standard_probdist.txt", sep="_"), 
+                paste("./sBM_ess/", args[1], "_", n.ess[i[2]],
+                      "_ess_standard_probdist.txt", sep=""), 
                 row.names=FALSE)
     write((proc.time()-ptm)[1:3], 
-          paste(args[1], n.ess[i[2]], "ess_standard_time.txt", sep="_"))
+          paste("./sBM_ess/", args[1], "_", n.ess[i[2]], 
+                "_ess_standard_time.txt", sep=""))
     
     i[2]= i[2]+1
   }
@@ -310,34 +326,38 @@ while(1){
       ess.app<- 4*(z/eps[i[1]])^2
       out<- list(n= n, app= ess.app, new= ess.new)
       write.table(out, 
-                  paste(args[1],n.ess[i[1]],"new_lower_output.txt", sep="_"), 
+                  paste("./nBM_lower/", args[1], "_", n.ess[i[1]],
+                        "_new_lower_output.txt", sep=""), 
                   row.names=FALSE)
       write.table(tank.mcse, 
-                  paste(args[1],n.ess[i[1]],"new_lower_mcse.txt", sep="_"), 
+                  paste("./nBM_lower/", args[1], "_", n.ess[i[1]],
+                        "_new_lower_mcse.txt", sep=""), 
                   row.names=FALSE)
       write.table(sqrt(tank.std[3,]/(n-1)), 
-                  paste(args[1],n.ess[i[1]],
-                        "new_lower_sd.txt",sep="_"), row.names=FALSE)
-      write.table(tank.mean, paste(args[1], n.ess[i[1]], 
-                                   "new_lower_mean.txt", sep="_"), 
+                  paste("./nBM_lower/", args[1], "_", n.ess[i[1]],
+                        "_new_lower_sd.txt",sep=""), row.names=FALSE)
+      write.table(tank.mean, 
+                  paste("./nBM_lower/", args[1], "_", n.ess[i[1]], 
+                        "_new_lower_mean.txt", sep=""), 
                   row.names=FALSE)
       upper<- tank.mean+z*tank.mcse
       lower<- tank.mean-z*tank.mcse
       # coverage of the resulting confidence interval (0/1)
       prob.coverage<- matrix((truth[,1]>=lower)&(truth[,1]<=upper),ncol=1)*1
       write.table(prob.coverage, 
-                  paste(args[1], n.ess[i[1]], 
-                        "new_lower_probcover.txt", sep="_"), 
+                  paste("./nBM_lower/", args[1], "_", n.ess[i[1]], 
+                        "_new_lower_probcover.txt", sep=""), 
                   row.names=FALSE)
       # distance between estimates and truth
       prob.distance<- matrix(abs(tank.mean-truth[,1])>=eps[i[1]]*truth[,2],
                              ncol= 1)*1
       write.table(prob.distance, 
-                  paste(args[1], n.ess[i[1]], 
-                        "new_lower_probdist.txt", sep="_"), 
+                  paste("./nBM_lower/", args[1], "_", n.ess[i[1]], 
+                        "_new_lower_probdist.txt", sep=""), 
                   row.names=FALSE)
-      write((proc.time()-ptm)[1:3], paste(args[1], n.ess[i[1]], 
-                                          "new_time.txt", sep="_"))
+      write((proc.time()-ptm)[1:3], 
+            paste("./nBM_lower/", args[1], "_", n.ess[i[1]], 
+                  "_new_time.txt", sep=""))
       
       i[1]= i[1] + 1
     }
@@ -348,35 +368,39 @@ while(1){
       tank.mean<- apply(tank, 2, mean)
       ess.app<- 4*(z/eps[i[2]])^2
       out<- list(n= n, app= ess.app, new= ess.new)
-      write.table(out, paste(args[1], n.ess[i[2]], 
-                             "ess_new_lower_output.txt", sep="_"),
+      write.table(out, paste("./nBM_lower_ess/", args[1], "_", n.ess[i[2]], 
+                             "_ess_new_lower_output.txt", sep=""),
                   row.names=FALSE)
-      write.table(tank.mcse, paste(args[1], n.ess[i[2]], 
-                                   "ess_new_lower_mcse.txt", sep="_"),
+      write.table(tank.mcse, 
+                  paste("./nBM_lower_ess/", args[1], "_", n.ess[i[2]], 
+                        "_ess_new_lower_mcse.txt", sep=""),
                 row.names=FALSE)
       write.table(sqrt(tank.std[3,]/(n-1)), 
-                  paste(args[1],n.ess[i[2]],"ess_new_lower_sd.txt", sep="_"),
+                  paste("./nBM_lower_ess/", args[1], "_", n.ess[i[2]],
+                        "_ess_new_lower_sd.txt", sep=""),
                 row.names=FALSE)
       write.table(tank.mean, 
-                paste(args[1],n.ess[i[2]],"ess_new_lower_mean.txt", sep="_"),
+                paste("./nBM_lower_ess/", args[1], "_", n.ess[i[2]],
+                      "_ess_new_lower_mean.txt", sep=""),
                 row.names=FALSE)
       upper<- tank.mean+z*tank.mcse
       lower<- tank.mean-z*tank.mcse
       # coverage of the resulting confidence interval (0/1)
       prob.coverage<- matrix((truth[,1]>=lower)&(truth[,1]<=upper),ncol=1)*1
       write.table(prob.coverage, 
-                  paste(args[1], n.ess[i[2]], 
-                        "ess_new_lower_probcover.txt", sep="_"), 
+                  paste("./nBM_lower_ess/", args[1], "_", n.ess[i[2]], 
+                        "_ess_new_lower_probcover.txt", sep=""), 
                   row.names=FALSE)
       # distance between estimates and truth
       prob.distance<- matrix(abs(tank.mean-truth[,1])>=eps[i[2]]*truth[,2],
                              ncol= 1)*1
       write.table(prob.distance, 
-                  paste(args[1], n.ess[i[2]], 
-                        "ess_new_lower_probdist.txt", sep="_"), 
+                  paste("./nBM_lower_ess/", args[1], "_", n.ess[i[2]], 
+                        "_ess_new_lower_probdist.txt", sep=""), 
                   row.names=FALSE)
-      write((proc.time()-ptm)[1:3], paste(args[1], n.ess[i[2]], 
-                                          "ess_new_time.txt", sep="_"))
+      write((proc.time()-ptm)[1:3], 
+            paste("./nBM_lower_ess/", args[1], "_", n.ess[i[2]], 
+                  "_ess_new_time.txt", sep=""))
       
       i[2]= i[2] + 1
     }
@@ -453,34 +477,37 @@ while(1){
       ess.app<- 4*(z/eps[i[1]])^2
       out<- list(n= n, app= ess.app, new= ess.new)
       write.table(out, 
-                  paste(args[1],n.ess[i[1]],"new_upper_output.txt", sep="_"), 
+                  paste("./nBM_upper/", args[1], "_", n.ess[i[1]],
+                        "_new_upper_output.txt", sep=""), 
                   row.names=FALSE)
       write.table(tank.mcse, 
-                  paste(args[1],n.ess[i[1]],"new_upper_mcse.txt", sep="_"), 
+                  paste("./nBM_upper/", args[1], "_", n.ess[i[1]],
+                        "_new_upper_mcse.txt", sep=""), 
                   row.names=FALSE)
       write.table(sqrt(tank.std[3,]/(n-1)), 
-                  paste(args[1],n.ess[i[1]],
-                        "new_upper_sd.txt",sep="_"), row.names=FALSE)
-      write.table(tank.mean, paste(args[1], n.ess[i[1]], 
-                                   "new_upper_mean.txt", sep="_"), 
+                  paste("./nBM_upper/", args[1], "_", n.ess[i[1]],
+                        "_new_upper_sd.txt",sep=""), row.names=FALSE)
+      write.table(tank.mean, paste("./nBM_upper/", args[1], "_", n.ess[i[1]], 
+                                   "_new_upper_mean.txt", sep=""), 
                   row.names=FALSE)
       upper<- tank.mean+z*tank.mcse
       lower<- tank.mean-z*tank.mcse
       # coverage of the resulting confidence interval (0/1)
       prob.coverage<- matrix((truth[,1]>=lower)&(truth[,1]<=upper),ncol=1)*1
       write.table(prob.coverage, 
-                  paste(args[1], n.ess[i[1]], 
-                        "new_upper_probcover.txt", sep="_"), 
+                  paste("./nBM_upper/", args[1], "_", n.ess[i[1]], 
+                        "_new_upper_probcover.txt", sep=""), 
                   row.names=FALSE)
       # distance between estimates and truth
       prob.distance<- matrix(abs(tank.mean-truth[,1])>=eps[i[1]]*truth[,2],
                              ncol= 1)*1
       write.table(prob.distance, 
-                  paste(args[1], n.ess[i[1]], 
-                        "new_upper_probdist.txt", sep="_"), 
+                  paste("./nBM_upper/", args[1], "_", n.ess[i[1]], 
+                        "_new_upper_probdist.txt", sep=""), 
                   row.names=FALSE)
-      write((proc.time()-ptm)[1:3], paste(args[1], n.ess[i[1]], 
-                                          "new_time.txt", sep="_"))
+      write((proc.time()-ptm)[1:3], 
+            paste("./nBM_upper/", args[1], "_", n.ess[i[1]], 
+                  "_new_time.txt", sep=""))
       
       i[1]= i[1] + 1
     }
@@ -491,35 +518,39 @@ while(1){
       tank.mean<- apply(tank, 2, mean)
       ess.app<- 4*(z/eps[i[2]])^2
       out<- list(n= n, app= ess.app, new= ess.new)
-      write.table(out, paste(args[1], n.ess[i[2]], 
-                             "ess_new_upper_output.txt", sep="_"),
+      write.table(out, paste("./nBM_upper_ess/", args[1], "_", n.ess[i[2]], 
+                             "_ess_new_upper_output.txt", sep=""),
                   row.names=FALSE)
-      write.table(tank.mcse, paste(args[1], n.ess[i[2]], 
-                                   "ess_new_upper_mcse.txt", sep="_"),
+      write.table(tank.mcse, 
+                  paste("./nBM_upper_ess/", args[1], "_", n.ess[i[2]], 
+                        "_ess_new_upper_mcse.txt", sep=""),
                   row.names=FALSE)
       write.table(sqrt(tank.std[3,]/(n-1)), 
-                  paste(args[1],n.ess[i[2]],"ess_new_upper_sd.txt", sep="_"),
+                  paste("./nBM_upper_ess/", args[1], "_", n.ess[i[2]],
+                        "_ess_new_upper_sd.txt", sep=""),
                   row.names=FALSE)
       write.table(tank.mean, 
-                  paste(args[1],n.ess[i[2]],"ess_new_upper_mean.txt", sep="_"),
+                  paste("./nBM_upper_ess/", args[1], "_", n.ess[i[2]],
+                        "_ess_new_upper_mean.txt", sep=""),
                   row.names=FALSE)
       upper<- tank.mean+z*tank.mcse
       lower<- tank.mean-z*tank.mcse
       # coverage of the resulting confidence interval (0/1)
       prob.coverage<- matrix((truth[,1]>=lower)&(truth[,1]<=upper),ncol=1)*1
       write.table(prob.coverage, 
-                  paste(args[1], n.ess[i[2]], 
-                        "ess_new_upper_probcover.txt", sep="_"), 
+                  paste("./nBM_upper_ess/", args[1], "_", n.ess[i[2]], 
+                        "_ess_new_upper_probcover.txt", sep=""), 
                   row.names=FALSE)
       # distance between estimates and truth
       prob.distance<- matrix(abs(tank.mean-truth[,1])>=eps[i[2]]*truth[,2],
                              ncol= 1)*1
       write.table(prob.distance, 
-                  paste(args[1], n.ess[i[2]], 
-                        "ess_new_upper_probdist.txt", sep="_"), 
+                  paste("./nBM_upper_ess/", args[1], "_", n.ess[i[2]], 
+                        "_ess_new_upper_probdist.txt", sep=""), 
                   row.names=FALSE)
-      write((proc.time()-ptm)[1:3], paste(args[1], n.ess[i[2]], 
-                                          "ess_new_time.txt", sep="_"))
+      write((proc.time()-ptm)[1:3], 
+            paste("./nBM_upper_ess/", args[1], n.ess[i[2]], 
+                  "_ess_new_time.txt", sep=""))
       
       i[2]= i[2] + 1
     }
