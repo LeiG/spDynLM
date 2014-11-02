@@ -89,7 +89,6 @@ mods <- lapply(paste(colnames(y.t),'elev',sep='~'), as.formula)
 
 #### generate MCMC samples ####
 n.samples<- 3000000
-n.samples<- 30000
 m.1<- spDynLM(mods, data=cbind(y.t,ne.temp[,"elev",drop=FALSE]), 
               coords=coords, starting=starting, tuning=tuning, priors=priors,
               get.fitted =TRUE, cov.model="exponential", n.samples=n.samples,
@@ -114,7 +113,7 @@ bm<- function(x){
 }
 ## parameter settings
 z<- 1.96
-n.ess<- c(10, 20, 40, 1000000)
+n.ess<- c(1000, 2000, 4000, 1000000)
 eps<- sqrt(4*z^2/n.ess) # equivalence between ess and eps
 
 ## geweke diagnostic #########################################################
