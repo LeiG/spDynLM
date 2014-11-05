@@ -19,26 +19,24 @@
 #
 # output
 # -------
-# *_args[1]_cond_new.txt: 
-#
-# *_args[1]_output_new.txt: matrix of parameter-wise total simulation
+# args[1]_'ess'_output_'method'.txt: matrix of parameter-wise total simulation
 # effort, standard effective sample size and proposed effective sample size
 #
-# *_args[1]_mcse_new.txt: sequence of parameter-wise markov chain 
+# args[1]_'ess'_mcse_'method'.txt: sequence of parameter-wise markov chain 
 # standard error.
 #
-# *_args[1]_sd_new.txt: sequence of parameter-wise posterior standard
+# args[1]_'ess'_sd_'method'.txt: sequence of parameter-wise posterior standard
 # deivation.
 #
-# *_args[1]_mean_new.txt: sequence of parameter-wise posterior mean.
+# args[1]_'ess'_mean_'method'.txt: sequence of parameter-wise posterior mean.
 #
-# *_args[1]_time_new.txt: record the actual run time.
+# args[1]_'ess'_time_'method'.txt: record the actual run time.
 #
-# *_args[1]_probcover_new.txt: 0/1 valued sequence used to estimate the 
-# coverage probabilities of each parameter.
+# args[1]_'ess'_probcover_'method'.txt: 0/1 valued sequence used to estimate
+# the coverage probabilities of each parameter.
 #
-# *_args[1]_probdist_new.txt: 0/1 valued sequence used to estimate the
-# prob. of whether the distance of estimates from truth is larger than the
+# args[1]_'ess'_probdist_'method'.txt: 0/1 valued sequence used to estimate 
+# the prob. of whether the distance of estimates from truth is larger than the
 # threshold.
 #-----------------------------------------------------------------------------
 
@@ -142,7 +140,7 @@ write.table(diag.sd,
 write.table(diag.mean, 
             paste("./geweke/", args[1], "_geweke_mean.txt", sep=""), 
             row.names=FALSE)
-write.table(list(n=n, ess.old=diag.ess.old, ess.new=diag.ess.new),
+write.table(list(n=(n.geweke-burn_in), ess.old=diag.ess.old, ess.new=diag.ess.new),
             paste("./geweke/", args[1], "_geweke_output.txt", sep=""),
             row.names=FALSE)
 write((proc.time()-ptm)[1:3], 
