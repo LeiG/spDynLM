@@ -62,13 +62,13 @@ if(length(grep(method, 'geweke'))){
   ## memory usage calculation
   b.size<- 2^seq(7, 15)
   cal_memory_lower<- function(x){
-    b<-2^max(which(sqrt(x)>=b.size)+6)
-    a<- floor(x/b)
+    b<-2^max(which(sqrt(x[1])>=b.size)+6)
+    a<- floor(x[1]/b)
     return(object.size(matrix(runif(186*a),186,a)))
   }
   cal_memory_upper<- function(x){
-    b<-2^min(which(sqrt(x)<=b.size)+6)
-    a<- floor(x/b)
+    b<-2^min(which(sqrt(x[1])<=b.size)+6)
+    a<- floor(x[1]/b)
     return(object.size(matrix(runif(186*a),186,a)))
   }
   
@@ -103,7 +103,8 @@ if(length(grep(method, 'geweke'))){
     # calculate max memory
     if(length(grep(method, c('standard', 'ess_standard')))){
       run.memory<- apply(run.length, 2, 
-                         function(x){object.size(matrix(runif(186*x),186,x))})
+                         function(x){
+                           object.size(matrix(runif(186*x[1]),186,x[1]))})
     }else if(length(grep(method, c('new_lower', 'ess_new_lower')))){
       run.memory<- apply(run.length, 2, cal_memory_lower)      
     }else if(length(grep(method, c('new_upper', 'ess_new_upper')))){
