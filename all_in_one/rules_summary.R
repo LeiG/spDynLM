@@ -39,7 +39,7 @@ if(length(grep(method, 'geweke'))){
   ## estimate parameters
   prob.cover<- simplify2array(prob.cover)
   prob.cover<- apply(prob.cover, 1, mean)
-  write.table(prob.cover 
+  write.table(prob.cover, 
               paste(method, "prob.txt", sep="_"), 
               col.names=c("coverage"),
               row.names=FALSE)
@@ -58,8 +58,7 @@ if(length(grep(method, 'geweke'))){
               paste(method, "output.txt", sep="_"),
               col.names=c("length", "memory", "coverage"),
               row.names=FALSE)
-}
-else{
+}else{
   n.ess<- c(1000, 2000, 4000)
   for(n in n.ess){
     prob.cover<- list()
