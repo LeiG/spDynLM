@@ -89,15 +89,15 @@ if(length(grep(method, 'geweke'))){
     avg.length<- mean(run.length)
     # calculate max memory
     b.size<- 2^seq(7, 15)
-    if(length(grep(method, c('sBM', 'sBM_ess')))){
+    if(length(grep(method, c('standard', 'ess_standard')))){
       run.memory<- apply(run.length, 1, 
                          function(x){object.size(matrix(runif(186*x),186,x))})
-    }else if(length(grep(method, c('nBM_lower', 'nBM_lower_ess')))){
+    }else if(length(grep(method, c('new_lower', 'ess_new_lower')))){
       run.memory<- apply(run.length, 1, 
                          function(x){b<-2^max(which(sqrt(x)>=b.size)+6);
                                      a<- floor(x/b);
                                      object.size(matrix(runif(186*a),186,a))})      
-    }else if(length(grep(method, c('nBM_upper', 'nBM_upper_ess')))){
+    }else if(length(grep(method, c('new_upper', 'ess_new_upper')))){
       run.memory<- apply(run.length, 1, 
                          function(x){b<-2^min(which(sqrt(x)<=b.size)+6);
                                      a<- floor(x/b);
