@@ -6,7 +6,7 @@
 # ------
 # args[1]: the totol number of parallel runs 
 #
-# args[2]: a string ["new" or "standard"] indicating the source of results
+# args[2]: a string indicating the method of interest
 #
 # output
 # ------
@@ -24,7 +24,7 @@ n.parallel<- as.numeric(args[1])
 method<- args[2]
 
 #### summarize information ####
-if(method == 'geweke'){
+if(method in c('geweke')){
   prob.cover<- list()
   run.length<- list()
   for(i in 1:n.parallel){
@@ -39,7 +39,7 @@ if(method == 'geweke'){
   ## estimate parameters
   prob.cover<- simplify2array(prob.cover)
   prob.cover<- apply(prob.cover, 1, mean)
-  write.table(prob.cover), 
+  write.table(prob.cover 
               paste(method, "prob.txt", sep="_"), 
               col.names=c("coverage"),
               row.names=FALSE)
