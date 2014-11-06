@@ -59,6 +59,19 @@ if(length(grep(method, 'geweke'))){
               col.names=c("length", "memory", "coverage"),
               row.names=FALSE)
 }else{
+  ## memory usage calculation
+  b.size<- 2^seq(7, 15)
+  cal_memory_lower<- function(x){
+    b<-2^max(which(sqrt(x)>=b.size)+6)
+    a<- floor(x/b)
+    return(object.size(matrix(runif(186*a),186,a)))
+  }
+  cal_memory_upper<- function(x){
+    b<-2^min(which(sqrt(x)<=b.size)+6)
+    a<- floor(x/b)
+    return(object.size(matrix(runif(186*a),186,a)))
+  }
+  
   n.ess<- c(1000, 2000, 4000)
   for(n in n.ess){
     prob.cover<- list()
@@ -88,23 +101,14 @@ if(length(grep(method, 'geweke'))){
     sd.length<- sd(run.length)
     avg.length<- mean(run.length)
     # calculate max memory
-    b.size<- 2^seq(7, 15)
     if(length(grep(method, c('standard', 'ess_standard')))){
       run.memory<- apply(run.length, 2, 
                          function(x){object.size(matrix(runif(186*x),186,x))})
     }else if(length(grep(method, c('new_lower', 'ess_new_lower')))){
-      run.memory<- apply(run.length, 2, 
-                         function(x){b<-2^max(which(sqrt(x)>=b.size)+6);
-                                     a<- floor(x/b);
-                                     return(object.size(
-                                       matrix(runif(186*a),186,a)))})      
+      run.memory<- apply(run.length, 2, cal_memory_lower)      
     }else if(length(grep(method, c('new_upper', 'ess_new_upper')))){
-      run.memory<- apply(run.length, 2, 
-                         function(x){b<-2^min(which(sqrt(x)<=b.size)+6);
-                                     a<- floor(x/b);
-                                     return(object.size(
-                                       matrix(runif(186*a),186,a)))})      
-    }
+      run.memory<- apply(run.length, 2, cal_memory_upper)      
+    }else{print("WRONG method!!")}
     avg.memory<- mean(run.memory)
     sd.memory<- sd(run.memory)
     avg.cover<- mean(prob.cover)
