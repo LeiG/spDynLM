@@ -169,7 +169,7 @@ while(1){
   sBM.sd<- apply(samples[0:check,], 2, sd)
   
   ## FWSR
-  cond<- 2*z*sBM.mcse-eps[i[1]]*sBM.sd #95% confidence
+  cond<- 2*z*sBM.mcse+1/check-eps[i[1]]*sBM.sd #95% confidence
   if(all(cond<=0)){
     ess.old<- apply(samples[0:check,], 2, ess)
     ess.new<- sBM.sd^2/sBM.mcse^2
@@ -331,7 +331,7 @@ while(1){
     tank.mcse<- apply(tank, 2, sd)*sqrt(b.size[1]/n)
 
     ## FWSR
-    cond<- 2*z*tank.mcse-eps[i[1]]*sqrt(tank.std[3,]/(n-1))
+    cond<- 2*z*tank.mcse+1/n-eps[i[1]]*sqrt(tank.std[3,]/(n-1))
     if(all(cond<=0)){
       tank.mean<- apply(tank, 2, mean)
       ess.new<- (tank.std[3,]/(n-1))/(tank.mcse^2)
@@ -486,7 +486,7 @@ while(1){
     tank.mcse<- apply(tank, 2, sd)*sqrt(b.size[1]/n)
     
     ## FWSR
-    cond<- 2*z*tank.mcse-eps[i[1]]*sqrt(tank.std[3,]/(n-1))
+    cond<- 2*z*tank.mcse+1/n-eps[i[1]]*sqrt(tank.std[3,]/(n-1))
     if(all(cond<=0)){
       tank.mean<- apply(tank, 2, mean)
       ess.new<- (tank.std[3,]/(n-1))/(tank.mcse^2)
